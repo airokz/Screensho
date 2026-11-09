@@ -1,47 +1,77 @@
 # Screensho
 
-A private screenshot editor in one self-contained HTML file. Built for the macOS screenshot → crop → copy → paste workflow. No server, runtime dependencies, account, analytics, remote fonts, or network requests.
+A small, personal screenshot editor in one HTML file. Pick a capture, crop or resize it, then copy it into a chat or Dro.
 
-## Open and bookmark
+**[Download `index.html`](index.html)** · Open in Chrome and bookmark with Cmd+D.
 
-Open `index.html` in **Google Chrome**. Bookmark its file URL with **⌘D**:
+![Screensho editing the same fictional billing redesign used in Dro: recent captures on the left, an active crop on the right, and Copy image ready in the header](docs/screenshot.png)
 
-```
-file:///Users/apple/Projects/personal_tools/Screensho/index.html
-```
+## Use it
 
-1. Click **Connect Desktop folder**, choose Desktop, and allow read access. The picker starts at Desktop. macOS may also ask Chrome for Desktop access.
-2. The latest 100 screenshots appear in the left sidebar, newest first. Screensho checks for changes every 2.5 seconds while the page is visible, and when you return to it. Existing edits stay open when a new screenshot arrives.
-3. Select a screenshot. **Crop** → drag a rectangle in either direction → **Apply crop**. Escape cancels the crop selection.
-4. **Resize** changes the actual pixel dimensions, with proportions locked by default. **Zoom**, **Fit**, and **1:1** only change the view. Scroll to move around a zoomed image; Cmd/Ctrl + wheel zooms.
-5. Click **Copy image** (or **⌘C**) and **⌘V** into a chat or Dro. The clipboard contains an actual PNG image at the edited dimensions. If clipboard access is blocked, allow it in Chrome or use **Save PNG** and drag the downloaded file into your destination.
+Download `index.html` and open it in a desktop browser. That is the whole application, including its logo and favicon. No install, build step, server, account, or internet connection is required.
 
-The folder handle is remembered in IndexedDB. Chrome may ask you to reconnect after reopening or when permissions expire. The application cannot bypass the initial folder picker. Clearing browser storage or moving the HTML can require selecting the folder again.
+- Choose your **Screenshots folder**. The latest 100 images appear in the sidebar, newest first, and refresh while the page is visible.
+- Crop by dragging over the image in either direction, then click **Apply crop**.
+- Resize to exact pixel dimensions, with proportions locked by default.
+- Zoom, fit, and view at 1:1 without changing the output size.
+- Undo edits, reset to the original, or download a separate PNG.
+- Click **Copy image**, then paste the PNG into a chat or Dro with Cmd/Ctrl+V.
+- Import images with **Open images**, file drag-and-drop, or Cmd/Ctrl+V.
 
-**Import images**, drag-and-drop, and **⌘V** also work without a folder connection. Safari/Firefox users should use those options; live folder access requires a supporting Chromium browser. Only read permission is requested, and Screensho never writes to your screenshot folder.
+New screenshots appear at the top without interrupting the current edit. **Open Dro** opens the sibling local checkout when running from a file, or Dro's browser demo when Screensho is hosted.
 
-## Editing and privacy
+### Choose a Screenshots folder on macOS
 
-- Original files stay untouched. **Save PNG** downloads a separate `-screensho.png` copy.
-- **Undo / ⌘Z** keeps up to eight previous edits. Reset returns to the original and is also undoable.
-- Switching images asks before discarding edits. Reloading or closing an edited image triggers the browser's unsaved-work prompt. Edits themselves are held in memory and are not saved between sessions: copy or download anything you want to keep.
-- Folder scans include common macOS screenshot filename patterns (including English, Russian, Latvian, German, and French) and PNG/JPEG/WebP/GIF/AVIF/BMP files. Unrelated Desktop images are excluded. Manually import a capture if it has been renamed or your system uses another naming pattern. Scanning is limited to the selected folder, without recursion.
-- Output is PNG; animated images become a still frame. Image limits: 16,384 px per side and 40 megapixels.
-- Images and folder permissions stay in your browser. Nothing is uploaded to GitHub or another service. The private repository stores application code only.
+Chrome blocks connecting to the **whole Desktop** (as well as the whole home and Documents folders). A dedicated folder inside Desktop is supported. This is a browser restriction, not a macOS file permission to disable. See [Chromium's directory restrictions](https://chromium.googlesource.com/chromium/src.git/+/7917bc533702fc1e437398610f63563630955292/chrome/browser/file_system_access/chrome_file_system_access_permission_context.cc#304).
 
-**Open Dro** links to the sibling `../Dro/whiteboard.html` in your `personal_tools` folder.
+1. In Finder, create a folder named **Screenshots**, for example inside Desktop or Pictures.
+2. Press **Cmd+Shift+5**, open **Options → Other Location…**, and choose that folder as the save location for new captures. This also applies to captures taken with Cmd+Shift+4.
+3. In Screensho, click **Choose Screenshots folder** and select that subfolder.
+4. Move existing captures into the subfolder in Finder if you want them included, or select them individually through **Open images**.
 
-## Development and validation
+Screensho requests read access only. It remembers the folder in browser storage, but Chrome may require **Reconnect Screenshots folder** after reopening or when permissions expire. Screensho does not change your Mac's screenshot settings or move existing captures automatically.
 
-Edit `index.html` and reload it. The application remains a single HTML file; Node and Playwright are used only for development tests.
+## Shortcuts
+
+| Key                    | Action                      |
+| ---------------------- | --------------------------- |
+| Cmd/Ctrl+C             | Copy edited PNG             |
+| Cmd/Ctrl+V             | Import image from clipboard |
+| Cmd/Ctrl+Z             | Undo                        |
+| Escape                 | Cancel crop selection       |
+| Cmd/Ctrl + mouse wheel | Zoom                        |
+
+## Your files and privacy
+
+Screensho has no analytics, accounts, remote fonts, or outgoing network requests. Your images stay in browser memory, browser storage, and files you choose to save. The private repository contains application code and fictional example artwork, not your screenshots.
+
+**Copy or download important edits.** Edits are held in memory and are not restored after closing. Switching images asks before discarding edits; closing an edited page triggers the browser's unsaved-work prompt. Folder permission is a best-effort saved preference and can be cleared or tied to the HTML location. Saving downloads a new `-screensho.png` file; it never overwrites the original.
+
+The connected folder includes PNG, JPEG, WebP, GIF, AVIF, and BMP images, including renamed captures. Scanning is limited to that folder without recursion. Animated files become a still image. Images are limited to 40 megapixels and 16,384 pixels per side. Undo keeps up to eight previous edits; large images can still use substantial memory.
+
+## Scope and browser support
+
+Screensho is a personal desktop screenshot editor. Tested in desktop Chrome. Live folder access requires a supporting Chromium browser. Safari and Firefox can use file import, drag-and-drop, and paste; those browsers have not been verified.
+
+Clipboard access depends on your browser and permissions. Screensho copies actual PNG data. If copying is blocked, allow clipboard access or download the PNG and drag it into the destination.
+
+## Development
+
+Edit `index.html` and reload it. The code uses the same [Prettier](https://prettier.io) settings as Dro; run `npx prettier --write index.html tests` to keep diffs readable. Keep the application self-contained: no runtime dependencies, CDN assets, bundler, or backend. Tests and documentation are not needed to run it.
+
+Browser regression tests use Node.js, Playwright Core, and an installed Chrome browser:
 
 ```sh
 npm ci
 npm test
 ```
 
-Tests use installed macOS Google Chrome. Set `CHROME_PATH` to override its executable path. They generate their own image fixtures and do not read Desktop or real screenshots. They cover cropping and output pixels, resize, zoom invariance, undo/reset, native PNG clipboard writing and reading, pasting into the sibling Dro checkout, PNG download dimensions, mocked folder ordering and refresh, filtering, disappearing files, safe filename rendering, responsive layout, and absence of outgoing requests. The Dro integration test expects `../Dro/whiteboard.html`.
+`CHROME_PATH` overrides the Chrome executable path. Tests open the HTML using `file://`, generate their own image fixtures, and cover crop pixels, resize, zoom invariance, undo/reset, real PNG clipboard data, pasting into the sibling Dro checkout, download dimensions, folder ordering and refresh, renamed captures, filtering, disappearing files, safe filenames, responsive layout, and no outgoing requests. Clipboard tests temporarily replace the clipboard with a generated image. Native folder dialogs and permission restoration in your normal Chrome profile require a manual check; permission errors and picker options use test fixtures.
 
-Native folder selection, its OS permission prompts, and permission restoration after restarting your regular Chrome profile require a manual first-run check. The automated folder test uses read-only handle fixtures, not your real Desktop. Clipboard tests temporarily replace the system clipboard with a generated test image. Test artifacts are ignored by Git.
+Run `node tests/preview.cjs` to regenerate `docs/screenshot.png` using the same fictional billing redesign examples from `../Dro/docs/screenshot.png`. No personal screenshots are used.
 
-Browser API references: [Chrome File System Access](https://developer.chrome.com/docs/capabilities/web-apis/file-system-access), [MDN clipboard writing](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/write).
+### GitHub Pages
+
+The deployment workflow follows Dro's `.github/workflows/pages.yml`: checkout, copy the single HTML into `_site`, configure Pages, upload the artifact, and deploy. Pages publishes the same application with no backend or screenshot uploads.
+
+**Deployment is currently unavailable:** GitHub rejected enabling Pages because the current plan does not support Pages for this private repository. The repository remains private. After switching to a Pages-capable plan, enable **Settings → Pages → Source: GitHub Actions**, set the repository Actions variable `PAGES_ENABLED=true`, and run **Deploy demo to GitHub Pages**. The workflow skips deployment while the repository is private and that variable is unset. No live-demo link is shown until deployment is available.

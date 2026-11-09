@@ -1,95 +1,1407 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light"><title>Screensho — a little room for screenshots</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='11' fill='%236253d9'/%3E%3Cpath d='M11 8v19a2 2 0 0 0 2 2h19M8 11h19a2 2 0 0 1 2 2v19' fill='none' stroke='white' stroke-width='3'/%3E%3C/svg%3E">
-<style>
-*{box-sizing:border-box} :root{font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#272633;background:#f4f3f0;--accent:#6253d9;--line:#e5e3e9;--muted:#797681}body{margin:0;height:100vh;display:grid;grid-template-columns:280px minmax(0,1fr);overflow:hidden}button,input,select{font:inherit}button,a{ -webkit-tap-highlight-color:transparent}button{cursor:pointer;background:white;border:1px solid var(--line);border-radius:8px;padding:9px 12px;color:inherit;white-space:nowrap}button:hover{background:#f5f3ff;border-color:#b9b0ed}button:disabled{opacity:.38;cursor:default}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #b0a5fa;outline-offset:2px}.primary{background:var(--accent);color:white;border-color:var(--accent);font-weight:600}.primary:hover{background:#5143be;color:white}.quiet{background:transparent}.sidebar{display:flex;flex-direction:column;background:#faf9f6;border-right:1px solid var(--line);min-height:0}.brand{padding:28px 23px 22px;display:flex;align-items:center;gap:11px}.logo{width:35px;height:35px;border-radius:11px;background:var(--accent);color:white;font-size:28px;line-height:30px;text-align:center}.brand strong{font-size:22px;letter-spacing:-.8px}.brand small{display:block;color:var(--muted);font-size:11px;margin-top:3px;letter-spacing:.4px}.folder{margin:0 16px;padding:14px;background:#efede8;border-radius:12px}.folder strong{font-size:12px;display:block;overflow:hidden;text-overflow:ellipsis}.folder p{font-size:12px;color:var(--muted);line-height:1.5;margin:5px 0 11px}.folder button{width:100%;font-size:12px}.listhead{display:flex;align-items:center;justify-content:space-between;padding:23px 20px 10px;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:1.5px}.listhead button{font-size:15px;padding:3px 7px;background:none;border:0}#filter{margin:0 16px 10px;padding:9px;border:1px solid var(--line);border-radius:7px;background:#fff;min-width:0}.files{overflow:auto;flex:1;padding:0 10px 15px}.shot{display:flex;gap:10px;align-items:center;width:100%;text-align:left;padding:10px;margin:3px 0;border-color:transparent;background:transparent;white-space:normal}.shot.active{background:#eeebfd;border-color:#d6cff7}.thumb{width:68px;height:49px;object-fit:contain;border:1px solid #dfdde4;border-radius:5px;background:white;flex-shrink:0}.shot span{min-width:0;display:block}.shot b{font-size:12px;display:block;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:151px}.shot small{font-size:10px;color:var(--muted);display:block;margin-top:6px}.listempty{color:var(--muted);font-size:12px;text-align:center;padding:35px 14px;line-height:1.6}.sidefoot{border-top:1px solid var(--line);padding:16px 20px;font-size:11px;color:var(--muted);line-height:1.8}.sidefoot a{color:#6253b2;text-decoration:none}.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#67a68a;margin-right:5px}main{min-width:0;display:flex;flex-direction:column;height:100vh}header{height:82px;flex-shrink:0;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;background:#fff;gap:12px}.heading{min-width:0}.eyebrow{font-size:10px;color:var(--muted);letter-spacing:1.7px;font-weight:650;margin-bottom:6px}h1{font-size:15px;font-weight:550;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.actions{display:flex;gap:8px}.actions .primary{padding:11px 22px}.toolbar{display:flex;align-items:center;gap:7px;min-height:62px;padding:12px 25px;border-bottom:1px solid var(--line);background:#fff;flex-wrap:wrap}.toolbar button{font-size:12px;padding:8px 11px}.toolbar .selected{background:#eeebfd;color:var(--accent);border-color:#c7bef2}.divider{height:20px;width:1px;background:var(--line);margin:0 5px}.spacer{flex:1}.zoom{display:flex;align-items:center;gap:3px}#zoomValue{font-size:12px;min-width:43px;text-align:center;font-variant-numeric:tabular-nums}.workspace{flex:1;overflow:auto;position:relative;background-color:#edecf0;background-image:radial-gradient(#d4d2dc .8px,transparent .8px);background-size:16px 16px;min-height:100px;overscroll-behavior:contain}.stage{min-width:100%;min-height:100%;width:max-content;display:flex;align-items:center;justify-content:center;padding:55px}.paper{position:relative;flex-shrink:0;box-shadow:0 10px 40px #29233c18;line-height:0;background:repeating-conic-gradient(#eee 0% 25%,white 0% 50%) 50%/16px 16px;overflow:hidden;touch-action:none}canvas{display:block}#selection{position:absolute;border:1.5px solid #fff;outline:1px solid var(--accent);box-shadow:0 0 0 15000px #1c183b65;pointer-events:none}#selection:after{content:"";position:absolute;inset:33.333%;border:1px solid #ffffff70}.paper.cropping{cursor:crosshair}.empty{max-width:410px;text-align:center;margin:auto;padding:50px 18px;color:var(--muted)}.empty .icon{font-size:42px;color:var(--accent);margin-bottom:22px}.empty h2{color:#3a3748;font-weight:550;letter-spacing:-.6px;font-size:26px}.empty p{font-size:14px;line-height:1.8;margin-bottom:24px}.empty button{margin:3px}.hint{font-size:11px;color:#96919f;margin-top:22px!important}footer{display:flex;justify-content:space-between;gap:14px;padding:13px 25px;border-top:1px solid var(--line);background:#fff;font-size:11px;color:var(--muted);min-height:43px}#status{max-width:70%;line-height:1.5}#dimensions{font-variant-numeric:tabular-nums;white-space:nowrap}.cropbar{display:flex;align-items:center;gap:9px;padding:10px 25px;background:#f2efff;border-bottom:1px solid #ded8fa;font-size:12px}.cropbar span{flex:1}dialog{border:1px solid var(--line);border-radius:16px;padding:26px;box-shadow:0 20px 100px #25203530;min-width:320px;color:inherit}dialog::backdrop{background:#201d3355}dialog h2{font-size:20px;margin:0 0 8px}dialog p{font-size:12px;color:var(--muted);line-height:1.6}.fields{display:flex;gap:12px;margin:20px 0}.fields label{font-size:12px;color:var(--muted)}.fields input{display:block;margin-top:7px;width:125px;border:1px solid var(--line);border-radius:6px;padding:10px;color:#272633}dialog .buttons{display:flex;justify-content:flex-end;gap:8px;margin-top:22px}#toast{position:fixed;bottom:65px;left:calc(50% + 100px);transform:translateX(-50%);background:#2e2944;color:#fff;padding:12px 22px;border-radius:9px;box-shadow:0 8px 35px #0002;font-size:13px;z-index:5;max-width:80vw;line-height:1.5}[hidden]{display:none!important}.dragover .workspace{outline:3px dashed var(--accent);outline-offset:-12px}@media(max-width:850px){body{grid-template-columns:210px minmax(0,1fr)}.brand{padding:22px 16px}.shot b{max-width:90px}.thumb{width:50px}header{padding:0 16px}.toolbar{padding:10px}.actions button{padding:9px!important}.toolbar .spacer{display:none}footer{padding:10px}.stage{padding:30px}}@media(max-width:580px){body{grid-template-columns:155px minmax(0,1fr)}.brand strong{font-size:18px}.brand{gap:6px;padding:20px 10px}.logo{width:27px;height:27px;font-size:23px;line-height:25px}.folder{margin:0 8px;padding:10px}.shot{padding:6px;display:block}.shot b{max-width:125px;margin-top:6px}.thumb{width:100%;height:60px}.listhead{padding:15px 10px}.sidefoot{padding:12px}.heading{display:none}header{height:65px;justify-content:flex-end}.cropbar{padding:10px;flex-wrap:wrap}#filter{margin:0 8px 8px}}
-</style>
-</head>
-<body>
-<aside class="sidebar">
-<div class="brand"><span class="logo" aria-hidden="true">⌗</span><div><strong>Screensho</strong><small>CAPTURE. TRIM. SHARE.</small></div></div>
-<div class="folder"><strong id="folderName">Your screenshot folder</strong><p id="folderHint">Connect Desktop to keep your latest captures close.</p><button id="connect">Connect Desktop folder</button></div>
-<div class="listhead"><span>RECENT CAPTURES <span id="count"></span></span><button id="refresh" title="Refresh screenshots" aria-label="Refresh screenshots">↻</button></div>
-<input id="filter" type="search" placeholder="Find a screenshot…" aria-label="Find a screenshot">
-<div class="files" id="files"><div class="listempty">Your screenshots will appear here,<br>newest first.</div></div>
-<div class="sidefoot"><span class="dot"></span>On your Mac. Just for you.<br><a href="../Dro/whiteboard.html" target="_blank" rel="noopener">Open Dro ↗</a> <span aria-hidden="true">&nbsp;·&nbsp;</span> <button id="import" style="border:0;padding:0;background:none;font-size:11px;color:#6253b2">Import images</button></div>
-</aside>
-<main>
-<header><div class="heading"><div class="eyebrow">YOUR LITTLE EDITING ROOM</div><h1 id="filename">A fresh capture, a clean canvas.</h1></div><div class="actions"><button id="download" disabled>Save PNG ↓</button><button id="copy" class="primary" disabled>Copy image <span aria-hidden="true">↗</span></button></div></header>
-<div class="toolbar" aria-label="Image tools"><button id="crop" disabled title="Drag to select a crop area">⌗ &nbsp;Crop</button><button id="resize" disabled>↔ &nbsp;Resize</button><div class="divider"></div><button id="undo" disabled title="Undo (⌘Z)">↶ Undo</button><button id="reset" disabled>Reset</button><div class="spacer"></div><div class="zoom"><button id="zoomOut" disabled aria-label="Zoom out">−</button><span id="zoomValue">100%</span><button id="zoomIn" disabled aria-label="Zoom in">+</button><button id="fit" disabled>Fit</button><button id="actual" disabled>1:1</button></div></div>
-<div class="cropbar" id="cropbar" hidden><span id="cropHint">Drag over the image to select an area.</span><button id="cancelCrop">Cancel</button><button id="applyCrop" class="primary" disabled>Apply crop</button></div>
-<div class="workspace" id="workspace"><div class="stage" id="stage" hidden><div class="paper" id="paper"><canvas id="canvas" aria-label="Screenshot being edited"></canvas><div id="selection" hidden></div></div></div><div class="empty" id="empty"><div class="icon" aria-hidden="true">⌗</div><div class="eyebrow">FROM SCREENSHOT TO SEND</div><h2>Make room for the good part.</h2><p>Your latest screenshots on the left.<br>A little space to crop, resize, and make them yours.</p><button class="primary" id="start">Connect Desktop folder</button><button id="openFiles">Open images</button><p class="hint">Or drop an image here · Paste with ⌘V<br>Use Chrome for a live Desktop folder.</p></div></div>
-<footer><span id="status" role="status" aria-live="polite">Ready when you are. Originals are always kept untouched.</span><span id="dimensions">No image selected</span></footer>
-</main>
-<input id="fileInput" type="file" accept="image/*" multiple hidden>
-<dialog id="resizeDialog"><form id="resizeForm"><h2>A new size.</h2><p>Set the output dimensions in pixels.<br>Zoom changes your view; resize changes the image.</p><div class="fields"><label>Width<input id="width" type="number" min="1" max="16384" required></label><label>Height<input id="height" type="number" min="1" max="16384" required></label></div><label style="font-size:12px"><input id="lock" type="checkbox" checked> Keep proportions</label><p>Maximum 16,384 px per side and 40 megapixels.</p><div class="buttons"><button type="button" id="cancelResize">Cancel</button><button class="primary" type="submit">Resize image</button></div></form></dialog>
-<div id="toast" role="status" hidden></div>
-<script>
-'use strict';
-const $=id=>document.getElementById(id);
-const canvas=$('canvas'),ctx=canvas.getContext('2d');
-let directory=null, entries=[], selected=null, original=null, history=[], dirty=false, zoom=1, fitMode=true, cropMode=false, cropRect=null, drag=null, scanning=false, busy=false, loadToken=0, toastTimer, db=null;
-const maxPixels=40000000, maxSide=16384;
-function status(message){$('status').textContent=message;}
-function toast(message){$('toast').textContent=message;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,3500);}
-function report(error){console.error(error);status(error.message||String(error));toast(error.message||'That did not work. Please try again.');}
-function validSize(w,h){return Number.isInteger(w)&&Number.isInteger(h)&&w>0&&h>0&&w<=maxSide&&h<=maxSide&&w*h<=maxPixels;}
-function imageFile(file){return /^image\//.test(file.type)||/\.(png|jpe?g|webp|gif|avif|bmp)$/i.test(file.name);}
-function isScreenshot(name){return /screen\s*shot|screen\s*capture|screenshot|скриншот|снимок\s*экрана|ekrānuzņēmums|bildschirmfoto|capture d[’']écran/i.test(name);}
-async function openDB(){return new Promise((resolve,reject)=>{const request=indexedDB.open('screensho',1);request.onupgradeneeded=()=>request.result.createObjectStore('settings');request.onerror=()=>reject(request.error);request.onsuccess=()=>resolve(request.result);});}
-async function storedHandle(value){if(!db)return;return new Promise((resolve,reject)=>{const tx=db.transaction('settings',value?'readwrite':'readonly');const req=value?tx.objectStore('settings').put(value,'directory'):tx.objectStore('settings').get('directory');let result;req.onsuccess=()=>result=req.result;tx.oncomplete=()=>resolve(result);tx.onerror=()=>reject(tx.error);});}
-async function connect(){try{if(!window.showDirectoryPicker){status('Live folder access needs Chrome or Edge. Use Open images, drop, or paste instead.');$('fileInput').click();return;}let handle=directory;if(handle&&await handle.queryPermission({mode:'read'})!=='granted'){if(await handle.requestPermission({mode:'read'})!=='granted')return;}else{handle=await showDirectoryPicker({id:'screensho-desktop',startIn:'desktop',mode:'read'});}directory=handle;try{await storedHandle(handle);}catch{toast('Folder connected for this session. Browser storage is unavailable.');}folderUI();await scan();}catch(e){if(e.name!=='AbortError')report(e);}}
-function folderUI(){if(!directory)return;$('folderName').textContent=directory.name;$('folderHint').textContent='Watching for new screenshots. Read-only access.';$('connect').textContent='Change folder';}
-async function scan(){if(!directory||scanning||document.hidden)return;scanning=true;try{if(await directory.queryPermission({mode:'read'})!=='granted'){$('connect').textContent='Reconnect folder';$('folderHint').textContent='Click Reconnect to allow folder access again.';return;}const found=[];for await(const handle of directory.values()){if(handle.kind==='file'&&isScreenshot(handle.name)&&/\.(png|jpe?g|webp|gif|avif|bmp)$/i.test(handle.name))found.push(handle);}
-// Read metadata in batches, so a large Desktop does not exhaust file descriptors.
-const files=[];for(let i=0;i<found.length;i+=20){const batch=await Promise.all(found.slice(i,i+20).map(async handle=>{try{const file=await handle.getFile();return {id:'folder:'+file.name,file,handle};}catch{return null;}}));files.push(...batch.filter(Boolean));}
-files.sort((a,b)=>b.file.lastModified-a.file.lastModified||a.file.name.localeCompare(b.file.name));const recent=files.slice(0,100);const oldSignature=entries.map(e=>e.id+':'+e.file.lastModified+':'+e.file.size).join('|');const imported=entries.filter(e=>!e.handle);entries=[...recent,...imported];const signature=entries.map(e=>e.id+':'+e.file.lastModified+':'+e.file.size).join('|');if(signature!==oldSignature){renderList();if(!selected&&entries.length)await selectEntry(entries[0]);else if(recent.length&&recent[0].id!==selected?.id)status('New captures are at the top of the list. Your current edit stays open.');}if(!entries.length)status('No screenshots found. Take one with ⌘⇧4, or import an image.');
-}catch(e){status('Folder could not be read. Reconnect to try again.');console.error(e);}finally{scanning=false;}}
-const thumbURLs=new Map();
-function renderList(){for(const url of thumbURLs.values())URL.revokeObjectURL(url);thumbURLs.clear();const list=$('files');list.replaceChildren();$('count').textContent=entries.length?`(${entries.length})`:'';const query=$('filter').value.toLocaleLowerCase();const visible=entries.filter(e=>e.file.name.toLocaleLowerCase().includes(query));for(const entry of visible){const button=document.createElement('button');button.className='shot'+(selected?.id===entry.id?' active':'');button.setAttribute('aria-pressed',String(selected?.id===entry.id));button.title=entry.file.name;const img=document.createElement('img');img.className='thumb';img.alt='';img.loading='lazy';const url=URL.createObjectURL(entry.file);thumbURLs.set(entry.id,url);img.src=url;const info=document.createElement('span'),name=document.createElement('b'),time=document.createElement('small');name.textContent=entry.file.name;time.textContent=new Date(entry.file.lastModified).toLocaleString(undefined,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});info.append(name,time);button.append(img,info);button.onclick=()=>selectEntry(entry).catch(report);list.append(button);}if(!visible.length){const empty=document.createElement('div');empty.className='listempty';empty.textContent=query?'No matching screenshots.':'No captures yet. Take a screenshot or import an image.';list.append(empty);}}
-async function decode(file){const url=URL.createObjectURL(file);try{const img=new Image();img.src=url;await img.decode();if(!validSize(img.naturalWidth,img.naturalHeight))throw new Error('Image is too large. Use an image under 40 megapixels and 16,384 px per side.');return img;}finally{URL.revokeObjectURL(url);}}
-async function selectEntry(entry){if(busy||selected?.id===entry.id)return;if(dirty&&!confirm('Open another screenshot? Current edits will be discarded. Copy or save first if you need them.'))return;const token=++loadToken;busy=true;updateControls();try{const img=await decode(entry.file);if(token!==loadToken)return;cancelCrop();canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;ctx.drawImage(img,0,0);original=img;selected=entry;history=[];dirty=false;fitMode=true;$('filename').textContent=entry.file.name;$('empty').hidden=true;$('stage').hidden=false;renderList();fit();status('Drag to crop, set a size, then copy. Your original file stays untouched.');}finally{busy=false;updateControls();}}
-function updateControls(){const ready=!!selected&&!busy;for(const id of ['crop','resize','reset','copy','download','zoomIn','zoomOut','fit','actual'])$(id).disabled=!ready;$('undo').disabled=!ready||history.length===0;$('dimensions').textContent=selected?`${canvas.width.toLocaleString()} × ${canvas.height.toLocaleString()} px${dirty?' · edited':''}`:'No image selected';}
-function setZoom(value){zoom=Math.max(.02,Math.min(8,value));$('paper').style.width=(canvas.width*zoom)+'px';$('paper').style.height=(canvas.height*zoom)+'px';canvas.style.width='100%';canvas.style.height='100%';$('zoomValue').textContent=Math.round(zoom*100)+'%';drawSelection();}
-function fit(){if(!selected)return;fitMode=true;setZoom(Math.min(1,Math.max(20,$('workspace').clientWidth-110)/canvas.width,Math.max(20,$('workspace').clientHeight-110)/canvas.height));}
-function snapshot(){if(history.length>=8)history.shift();history.push({url:canvas.toDataURL('image/png'),dirty});}
-function changed(){dirty=true;cancelCrop();if(fitMode)fit();else setZoom(zoom);updateControls();}
-function cancelCrop(){cropMode=false;cropRect=null;drag=null;$('paper').classList.remove('cropping');$('crop').classList.remove('selected');$('cropbar').hidden=true;$('selection').hidden=true;}
-function drawSelection(){if(!cropRect){$('selection').hidden=true;return;}const r=cropRect;Object.assign($('selection').style,{left:r.x*zoom+'px',top:r.y*zoom+'px',width:r.w*zoom+'px',height:r.h*zoom+'px'});$('selection').hidden=false;}
-function point(event){const r=canvas.getBoundingClientRect();return {x:Math.max(0,Math.min(canvas.width,Math.round((event.clientX-r.left)*canvas.width/r.width))),y:Math.max(0,Math.min(canvas.height,Math.round((event.clientY-r.top)*canvas.height/r.height)))};}
-$('paper').onpointerdown=e=>{if(!cropMode||busy||e.button!==0)return;e.preventDefault();drag=point(e);cropRect=null;$('paper').setPointerCapture(e.pointerId);};
-$('paper').onpointermove=e=>{if(!drag)return;const p=point(e);cropRect={x:Math.min(drag.x,p.x),y:Math.min(drag.y,p.y),w:Math.abs(p.x-drag.x),h:Math.abs(p.y-drag.y)};drawSelection();$('applyCrop').disabled=cropRect.w<1||cropRect.h<1;$('cropHint').textContent=`${cropRect.w} × ${cropRect.h} px selected`;};
-$('paper').onpointerup=()=>drag=null;$('paper').onpointercancel=()=>{drag=null;};
-$('crop').onclick=()=>{if(cropMode){cancelCrop();return;}cropMode=true;$('paper').classList.add('cropping');$('crop').classList.add('selected');$('cropbar').hidden=false;$('cropHint').textContent='Drag over the image to select an area.';$('applyCrop').disabled=true;};
-$('cancelCrop').onclick=cancelCrop;
-$('applyCrop').onclick=()=>{if(!cropRect||cropRect.w<1||cropRect.h<1)return;try{const r={...cropRect};const temp=document.createElement('canvas');temp.width=r.w;temp.height=r.h;temp.getContext('2d').drawImage(canvas,r.x,r.y,r.w,r.h,0,0,r.w,r.h);snapshot();canvas.width=r.w;canvas.height=r.h;ctx.drawImage(temp,0,0);changed();status('Cropped. Copy your image whenever it is ready.');}catch(e){report(e);}};
-$('resize').onclick=()=>{cancelCrop();$('width').value=canvas.width;$('height').value=canvas.height;$('resizeDialog').showModal();};
-$('width').oninput=()=>{if($('lock').checked)$('height').value=Math.max(1,Math.round(Number($('width').value)*canvas.height/canvas.width));};
-$('height').oninput=()=>{if($('lock').checked)$('width').value=Math.max(1,Math.round(Number($('height').value)*canvas.width/canvas.height));};
-$('cancelResize').onclick=()=>$('resizeDialog').close();
-$('resizeForm').onsubmit=e=>{e.preventDefault();const w=Number($('width').value),h=Number($('height').value);if(!validSize(w,h)){toast('Choose dimensions under 16,384 px per side and 40 megapixels.');return;}try{const temp=document.createElement('canvas');temp.width=w;temp.height=h;const t=temp.getContext('2d');t.imageSmoothingEnabled=true;t.imageSmoothingQuality='high';t.drawImage(canvas,0,0,w,h);snapshot();canvas.width=w;canvas.height=h;ctx.drawImage(temp,0,0);$('resizeDialog').close();changed();status('Resized. Copy and save use these exact dimensions.');}catch(error){report(error);}};
-async function undo(){if(!history.length||busy)return;busy=true;updateControls();try{const previous=history[history.length-1],img=new Image();img.src=previous.url;await img.decode();history.pop();canvas.width=img.width;canvas.height=img.height;ctx.drawImage(img,0,0);dirty=previous.dirty;cancelCrop();if(fitMode)fit();else setZoom(zoom);status('Undid the last edit.');}catch(e){report(e);}finally{busy=false;updateControls();}}
-$('undo').onclick=undo;
-$('reset').onclick=()=>{snapshot();canvas.width=original.naturalWidth;canvas.height=original.naturalHeight;ctx.drawImage(original,0,0);dirty=false;cancelCrop();fit();updateControls();status('Back to the original. You can undo this reset.');};
-function png(){return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(new Error('Could not create the PNG.')),'image/png'));}
-$('copy').onclick=async()=>{try{if(!navigator.clipboard?.write||!window.ClipboardItem)throw new Error('Image clipboard is unavailable. Use Chrome, or Save PNG and drag it into your chat.');await navigator.clipboard.write([new ClipboardItem({'image/png':png()})]);toast('Copied. Ready to paste with ⌘V.');status(`Copied ${canvas.width} × ${canvas.height} px PNG. Paste into a chat or Dro with ⌘V.`);}catch(e){status('Copy was blocked. Allow clipboard access in your browser, or use Save PNG.');toast('Could not copy. Allow clipboard access or use Save PNG.');console.error(e);}};
-$('download').onclick=async()=>{try{const blob=await png(),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=(selected.file.name.replace(/\.[^.]+$/,'')||'screenshot')+'-screensho.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);toast('PNG saved to your downloads.');}catch(e){report(e);}};
-$('zoomIn').onclick=()=>{fitMode=false;setZoom(zoom*1.25);};$('zoomOut').onclick=()=>{fitMode=false;setZoom(zoom/1.25);};$('fit').onclick=fit;$('actual').onclick=()=>{fitMode=false;setZoom(1);};
-$('workspace').addEventListener('wheel',e=>{if(selected&&(e.ctrlKey||e.metaKey)){e.preventDefault();fitMode=false;setZoom(zoom*Math.exp(-e.deltaY*.01));}},{passive:false});
-new ResizeObserver(()=>{if(fitMode&&selected)fit();}).observe($('workspace'));
-async function importFiles(files){const images=Array.from(files).filter(imageFile);if(!images.length){toast('Choose an image file such as PNG, JPEG, or WebP.');return;}const added=images.map((file,i)=>({id:'import:'+Date.now()+':'+i,file}));entries=[...added,...entries].slice(0,100);renderList();await selectEntry(added[0]);}
-$('fileInput').onchange=e=>{importFiles(e.target.files).catch(report);e.target.value='';};
-for(const id of ['import','openFiles'])$(id).onclick=()=>$('fileInput').click();for(const id of ['connect','start'])$(id).onclick=connect;
-$('refresh').onclick=()=>{if(directory)scan();else connect();};$('filter').oninput=renderList;
-let dragDepth=0;document.addEventListener('dragenter',e=>{if(e.dataTransfer.types.includes('Files')){e.preventDefault();dragDepth++;document.body.classList.add('dragover');}});document.addEventListener('dragover',e=>{if(e.dataTransfer.types.includes('Files'))e.preventDefault();});document.addEventListener('dragleave',()=>{if(--dragDepth<=0){dragDepth=0;document.body.classList.remove('dragover');}});document.addEventListener('drop',e=>{e.preventDefault();dragDepth=0;document.body.classList.remove('dragover');importFiles(e.dataTransfer.files).catch(report);});
-document.addEventListener('paste',e=>{if(e.target.matches('input,textarea'))return;const files=Array.from(e.clipboardData?.files||[]).filter(imageFile);if(files.length){e.preventDefault();importFiles(files).catch(report);}});
-document.addEventListener('keydown',e=>{if(e.target.matches('input,textarea')||$('resizeDialog').open)return;if(e.key==='Escape')cancelCrop();if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='z'&&!e.shiftKey){e.preventDefault();undo();}if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='c'&&selected){e.preventDefault();$('copy').click();}});
-window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)scan();});window.addEventListener('focus',scan);setInterval(scan,2500);
-(async()=>{try{db=await openDB();directory=await storedHandle();if(directory){folderUI();if(await directory.queryPermission({mode:'read'})==='granted')await scan();else{$('connect').textContent='Reconnect folder';$('folderHint').textContent='Your folder is remembered. Click to allow access.';}}}catch{status('Browser storage is unavailable. Connect a folder for this session, or import images.');}if(!window.showDirectoryPicker){$('folderHint').textContent='Use Chrome for live folder access. You can still open, drop, or paste images.';$('connect').textContent='Open images';$('start').textContent='Open images';}})();
-</script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Screensho — a little room for screenshots</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='11' fill='%236253d9'/%3E%3Cpath d='M11 8v19a2 2 0 0 0 2 2h19M8 11h19a2 2 0 0 1 2 2v19' fill='none' stroke='white' stroke-width='3'/%3E%3C/svg%3E"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      :root {
+        font:
+          14px -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        color: #272633;
+        background: #f4f3f0;
+        --accent: #6253d9;
+        --line: #e5e3e9;
+        --muted: #797681;
+      }
+      body {
+        margin: 0;
+        height: 100vh;
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr);
+        overflow: hidden;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      button,
+      a {
+        -webkit-tap-highlight-color: transparent;
+      }
+      button {
+        cursor: pointer;
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 9px 12px;
+        color: inherit;
+        white-space: nowrap;
+      }
+      button:hover {
+        background: #f5f3ff;
+        border-color: #b9b0ed;
+      }
+      button:disabled {
+        opacity: 0.38;
+        cursor: default;
+      }
+      button:focus-visible,
+      a:focus-visible,
+      input:focus-visible,
+      select:focus-visible {
+        outline: 3px solid #b0a5fa;
+        outline-offset: 2px;
+      }
+      .primary {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+        font-weight: 600;
+      }
+      .primary:hover {
+        background: #5143be;
+        color: white;
+      }
+      .quiet {
+        background: transparent;
+      }
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        background: #faf9f6;
+        border-right: 1px solid var(--line);
+        min-height: 0;
+      }
+      .brand {
+        padding: 28px 23px 22px;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+      }
+      .logo {
+        width: 35px;
+        height: 35px;
+        border-radius: 11px;
+        background: var(--accent);
+        color: white;
+        font-size: 28px;
+        line-height: 30px;
+        text-align: center;
+      }
+      .brand strong {
+        font-size: 22px;
+        letter-spacing: -0.8px;
+      }
+      .brand small {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        margin-top: 3px;
+        letter-spacing: 0.4px;
+      }
+      .folder {
+        margin: 0 16px;
+        padding: 14px;
+        background: #efede8;
+        border-radius: 12px;
+      }
+      .folder strong {
+        font-size: 12px;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .folder p {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.5;
+        margin: 5px 0 11px;
+      }
+      .folder button {
+        width: 100%;
+        font-size: 12px;
+      }
+      .setup {
+        font-size: 11px;
+        line-height: 1.6;
+        margin-top: 11px;
+        color: var(--muted);
+      }
+      .setup summary {
+        cursor: pointer;
+        color: #6253b2;
+      }
+      .setup p {
+        font-size: 11px;
+        margin: 9px 0 0;
+      }
+      .listhead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 23px 20px 10px;
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+      }
+      .listhead button {
+        font-size: 15px;
+        padding: 3px 7px;
+        background: none;
+        border: 0;
+      }
+      #filter {
+        margin: 0 16px 10px;
+        padding: 9px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: #fff;
+        min-width: 0;
+      }
+      .files {
+        overflow: auto;
+        flex: 1;
+        padding: 0 10px 15px;
+      }
+      .shot {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        width: 100%;
+        text-align: left;
+        padding: 10px;
+        margin: 3px 0;
+        border-color: transparent;
+        background: transparent;
+        white-space: normal;
+      }
+      .shot.active {
+        background: #eeebfd;
+        border-color: #d6cff7;
+      }
+      .thumb {
+        width: 68px;
+        height: 49px;
+        object-fit: contain;
+        border: 1px solid #dfdde4;
+        border-radius: 5px;
+        background: white;
+        flex-shrink: 0;
+      }
+      .shot span {
+        min-width: 0;
+        display: block;
+      }
+      .shot b {
+        font-size: 12px;
+        display: block;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 151px;
+      }
+      .shot small {
+        font-size: 10px;
+        color: var(--muted);
+        display: block;
+        margin-top: 6px;
+      }
+      .listempty {
+        color: var(--muted);
+        font-size: 12px;
+        text-align: center;
+        padding: 35px 14px;
+        line-height: 1.6;
+      }
+      .sidefoot {
+        border-top: 1px solid var(--line);
+        padding: 16px 20px;
+        font-size: 11px;
+        color: var(--muted);
+        line-height: 1.8;
+      }
+      .sidefoot a {
+        color: #6253b2;
+        text-decoration: none;
+      }
+      .dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #67a68a;
+        margin-right: 5px;
+      }
+      main {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+      header {
+        height: 82px;
+        flex-shrink: 0;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 30px;
+        background: #fff;
+        gap: 12px;
+      }
+      .heading {
+        min-width: 0;
+      }
+      .eyebrow {
+        font-size: 10px;
+        color: var(--muted);
+        letter-spacing: 1.7px;
+        font-weight: 650;
+        margin-bottom: 6px;
+      }
+      h1 {
+        font-size: 15px;
+        font-weight: 550;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+      }
+      .actions .primary {
+        padding: 11px 22px;
+      }
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        min-height: 62px;
+        padding: 12px 25px;
+        border-bottom: 1px solid var(--line);
+        background: #fff;
+        flex-wrap: wrap;
+      }
+      .toolbar button {
+        font-size: 12px;
+        padding: 8px 11px;
+      }
+      .toolbar .selected {
+        background: #eeebfd;
+        color: var(--accent);
+        border-color: #c7bef2;
+      }
+      .divider {
+        height: 20px;
+        width: 1px;
+        background: var(--line);
+        margin: 0 5px;
+      }
+      .spacer {
+        flex: 1;
+      }
+      .zoom {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      #zoomValue {
+        font-size: 12px;
+        min-width: 43px;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+      }
+      .workspace {
+        flex: 1;
+        overflow: auto;
+        position: relative;
+        background-color: #edecf0;
+        background-image: radial-gradient(#d4d2dc 0.8px, transparent 0.8px);
+        background-size: 16px 16px;
+        min-height: 100px;
+        overscroll-behavior: contain;
+      }
+      .stage {
+        min-width: 100%;
+        min-height: 100%;
+        width: max-content;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 55px;
+      }
+      .paper {
+        position: relative;
+        flex-shrink: 0;
+        box-shadow: 0 10px 40px #29233c18;
+        line-height: 0;
+        background: repeating-conic-gradient(#eee 0% 25%, white 0% 50%) 50%/16px 16px;
+        overflow: hidden;
+        touch-action: none;
+      }
+      canvas {
+        display: block;
+      }
+      #selection {
+        position: absolute;
+        border: 1.5px solid #fff;
+        outline: 1px solid var(--accent);
+        box-shadow: 0 0 0 15000px #1c183b65;
+        pointer-events: none;
+      }
+      #selection:after {
+        content: "";
+        position: absolute;
+        inset: 33.333%;
+        border: 1px solid #ffffff70;
+      }
+      .paper.cropping {
+        cursor: crosshair;
+      }
+      .empty {
+        max-width: 410px;
+        text-align: center;
+        margin: auto;
+        padding: 50px 18px;
+        color: var(--muted);
+      }
+      .empty .icon {
+        font-size: 42px;
+        color: var(--accent);
+        margin-bottom: 22px;
+      }
+      .empty h2 {
+        color: #3a3748;
+        font-weight: 550;
+        letter-spacing: -0.6px;
+        font-size: 26px;
+      }
+      .empty p {
+        font-size: 14px;
+        line-height: 1.8;
+        margin-bottom: 24px;
+      }
+      .empty button {
+        margin: 3px;
+      }
+      .hint {
+        font-size: 11px;
+        color: #96919f;
+        margin-top: 22px !important;
+      }
+      footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 13px 25px;
+        border-top: 1px solid var(--line);
+        background: #fff;
+        font-size: 11px;
+        color: var(--muted);
+        min-height: 43px;
+      }
+      #status {
+        max-width: 70%;
+        line-height: 1.5;
+      }
+      #dimensions {
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      .cropbar {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 10px 25px;
+        background: #f2efff;
+        border-bottom: 1px solid #ded8fa;
+        font-size: 12px;
+      }
+      .cropbar span {
+        flex: 1;
+      }
+      dialog {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 26px;
+        box-shadow: 0 20px 100px #25203530;
+        min-width: 320px;
+        color: inherit;
+      }
+      dialog::backdrop {
+        background: #201d3355;
+      }
+      dialog h2 {
+        font-size: 20px;
+        margin: 0 0 8px;
+      }
+      dialog p {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .fields {
+        display: flex;
+        gap: 12px;
+        margin: 20px 0;
+      }
+      .fields label {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .fields input {
+        display: block;
+        margin-top: 7px;
+        width: 125px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 10px;
+        color: #272633;
+      }
+      dialog .buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 22px;
+      }
+      #toast {
+        position: fixed;
+        bottom: 65px;
+        left: calc(50% + 100px);
+        transform: translateX(-50%);
+        background: #2e2944;
+        color: #fff;
+        padding: 12px 22px;
+        border-radius: 9px;
+        box-shadow: 0 8px 35px #0002;
+        font-size: 13px;
+        z-index: 5;
+        max-width: 80vw;
+        line-height: 1.5;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      .dragover .workspace {
+        outline: 3px dashed var(--accent);
+        outline-offset: -12px;
+      }
+      @media (max-width: 850px) {
+        body {
+          grid-template-columns: 210px minmax(0, 1fr);
+        }
+        .brand {
+          padding: 22px 16px;
+        }
+        .shot b {
+          max-width: 90px;
+        }
+        .thumb {
+          width: 50px;
+        }
+        header {
+          padding: 0 16px;
+        }
+        .toolbar {
+          padding: 10px;
+        }
+        .actions button {
+          padding: 9px !important;
+        }
+        .toolbar .spacer {
+          display: none;
+        }
+        footer {
+          padding: 10px;
+        }
+        .stage {
+          padding: 30px;
+        }
+      }
+      @media (max-width: 580px) {
+        body {
+          grid-template-columns: 155px minmax(0, 1fr);
+        }
+        .brand strong {
+          font-size: 18px;
+        }
+        .brand {
+          gap: 6px;
+          padding: 20px 10px;
+        }
+        .logo {
+          width: 27px;
+          height: 27px;
+          font-size: 23px;
+          line-height: 25px;
+        }
+        .folder {
+          margin: 0 8px;
+          padding: 10px;
+        }
+        .shot {
+          padding: 6px;
+          display: block;
+        }
+        .shot b {
+          max-width: 125px;
+          margin-top: 6px;
+        }
+        .thumb {
+          width: 100%;
+          height: 60px;
+        }
+        .listhead {
+          padding: 15px 10px;
+        }
+        .sidefoot {
+          padding: 12px;
+        }
+        .heading {
+          display: none;
+        }
+        header {
+          height: 65px;
+          justify-content: flex-end;
+        }
+        .cropbar {
+          padding: 10px;
+          flex-wrap: wrap;
+        }
+        #filter {
+          margin: 0 8px 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">⌗</span>
+        <div><strong>Screensho</strong><small>CAPTURE. TRIM. SHARE.</small></div>
+      </div>
+      <div class="folder">
+        <strong id="folderName">Screenshots folder</strong>
+        <p id="folderHint">Choose the folder where your screenshots are saved.</p>
+        <button id="connect">Choose Screenshots folder</button>
+        <details class="setup">
+          <summary>Set up a Screenshots folder</summary>
+          <p>
+            Chrome cannot connect to the whole Desktop. Create a <strong>Screenshots</strong> folder
+            inside it, then select that folder.
+          </p>
+          <p>
+            For new captures: press <strong>⌘⇧5</strong> → <strong>Options</strong> →
+            <strong>Other Location…</strong> and choose your Screenshots folder.
+          </p>
+          <p>
+            Existing images on Desktop? Use <strong>Open images</strong>, or move them into
+            Screenshots in Finder.
+          </p>
+        </details>
+      </div>
+      <div class="listhead">
+        <span>RECENT CAPTURES <span id="count"></span></span
+        ><button id="refresh" title="Refresh screenshots" aria-label="Refresh screenshots">
+          ↻
+        </button>
+      </div>
+      <input
+        id="filter"
+        type="search"
+        placeholder="Find a screenshot…"
+        aria-label="Find a screenshot"
+      />
+      <div class="files" id="files">
+        <div class="listempty">Your screenshots will appear here,<br />newest first.</div>
+      </div>
+      <div class="sidefoot">
+        <span class="dot"></span>On your Mac. Just for you.<br /><a
+          id="droLink"
+          href="../Dro/whiteboard.html"
+          target="_blank"
+          rel="noopener"
+          >Open Dro ↗</a
+        >
+        <span aria-hidden="true">&nbsp;·&nbsp;</span>
+        <button
+          id="import"
+          style="border: 0; padding: 0; background: none; font-size: 11px; color: #6253b2"
+        >
+          Import images
+        </button>
+      </div>
+    </aside>
+    <main>
+      <header>
+        <div class="heading">
+          <div class="eyebrow">YOUR LITTLE EDITING ROOM</div>
+          <h1 id="filename">A fresh capture, a clean canvas.</h1>
+        </div>
+        <div class="actions">
+          <button id="download" disabled>Save PNG ↓</button
+          ><button id="copy" class="primary" disabled>
+            Copy image <span aria-hidden="true">↗</span>
+          </button>
+        </div>
+      </header>
+      <div class="toolbar" aria-label="Image tools">
+        <button id="crop" disabled title="Drag to select a crop area">⌗ &nbsp;Crop</button
+        ><button id="resize" disabled>↔ &nbsp;Resize</button>
+        <div class="divider"></div>
+        <button id="undo" disabled title="Undo (⌘Z)">↶ Undo</button
+        ><button id="reset" disabled>Reset</button>
+        <div class="spacer"></div>
+        <div class="zoom">
+          <button id="zoomOut" disabled aria-label="Zoom out">−</button
+          ><span id="zoomValue">100%</span
+          ><button id="zoomIn" disabled aria-label="Zoom in">+</button
+          ><button id="fit" disabled>Fit</button><button id="actual" disabled>1:1</button>
+        </div>
+      </div>
+      <div class="cropbar" id="cropbar" hidden>
+        <span id="cropHint">Drag over the image to select an area.</span
+        ><button id="cancelCrop">Cancel</button
+        ><button id="applyCrop" class="primary" disabled>Apply crop</button>
+      </div>
+      <div class="workspace" id="workspace">
+        <div class="stage" id="stage" hidden>
+          <div class="paper" id="paper">
+            <canvas id="canvas" aria-label="Screenshot being edited"></canvas>
+            <div id="selection" hidden></div>
+          </div>
+        </div>
+        <div class="empty" id="empty">
+          <div class="icon" aria-hidden="true">⌗</div>
+          <div class="eyebrow">FROM SCREENSHOT TO SEND</div>
+          <h2>Make room for the good part.</h2>
+          <p>
+            Your latest screenshots on the left.<br />A little space to crop, resize, and make them
+            yours.
+          </p>
+          <button class="primary" id="start">Choose Screenshots folder</button
+          ><button id="openFiles">Open images</button>
+          <p class="hint">
+            Or drop an image here · Paste with ⌘V<br />Use Chrome for a live Screenshots folder.
+          </p>
+        </div>
+      </div>
+      <footer>
+        <span id="status" role="status" aria-live="polite"
+          >Ready when you are. Originals are always kept untouched.</span
+        ><span id="dimensions">No image selected</span>
+      </footer>
+    </main>
+    <input id="fileInput" type="file" accept="image/*" multiple hidden />
+    <dialog id="resizeDialog">
+      <form id="resizeForm">
+        <h2>A new size.</h2>
+        <p>
+          Set the output dimensions in pixels.<br />Zoom changes your view; resize changes the
+          image.
+        </p>
+        <div class="fields">
+          <label>Width<input id="width" type="number" min="1" max="16384" required /></label
+          ><label>Height<input id="height" type="number" min="1" max="16384" required /></label>
+        </div>
+        <label style="font-size: 12px"
+          ><input id="lock" type="checkbox" checked /> Keep proportions</label
+        >
+        <p>Maximum 16,384 px per side and 40 megapixels.</p>
+        <div class="buttons">
+          <button type="button" id="cancelResize">Cancel</button
+          ><button class="primary" type="submit">Resize image</button>
+        </div>
+      </form>
+    </dialog>
+    <div id="toast" role="status" hidden></div>
+    <script>
+      "use strict";
+      const $ = (id) => document.getElementById(id);
+      const canvas = $("canvas"),
+        ctx = canvas.getContext("2d");
+      let directory = null,
+        entries = [],
+        selected = null,
+        original = null,
+        history = [],
+        dirty = false,
+        zoom = 1,
+        fitMode = true,
+        cropMode = false,
+        cropRect = null,
+        drag = null,
+        scanning = false,
+        busy = false,
+        loadToken = 0,
+        toastTimer,
+        db = null;
+      const maxPixels = 40000000,
+        maxSide = 16384;
+      if (location.protocol === "https:" || location.protocol === "http:")
+        $("droLink").href = "https://airokz.github.io/Dro/";
+      function status(message) {
+        $("status").textContent = message;
+      }
+      function toast(message) {
+        $("toast").textContent = message;
+        $("toast").hidden = false;
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => ($("toast").hidden = true), 3500);
+      }
+      function report(error) {
+        console.error(error);
+        status(error.message || String(error));
+        toast(error.message || "That did not work. Please try again.");
+      }
+      function validSize(w, h) {
+        return (
+          Number.isInteger(w) &&
+          Number.isInteger(h) &&
+          w > 0 &&
+          h > 0 &&
+          w <= maxSide &&
+          h <= maxSide &&
+          w * h <= maxPixels
+        );
+      }
+      function imageFile(file) {
+        return /^image\//.test(file.type) || /\.(png|jpe?g|webp|gif|avif|bmp)$/i.test(file.name);
+      }
+      async function openDB() {
+        return new Promise((resolve, reject) => {
+          const request = indexedDB.open("screensho", 1);
+          request.onupgradeneeded = () => request.result.createObjectStore("settings");
+          request.onerror = () => reject(request.error);
+          request.onsuccess = () => resolve(request.result);
+        });
+      }
+      async function storedHandle(value) {
+        if (!db) return;
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction("settings", value ? "readwrite" : "readonly");
+          const req = value
+            ? tx.objectStore("settings").put(value, "directory")
+            : tx.objectStore("settings").get("directory");
+          let result;
+          req.onsuccess = () => (result = req.result);
+          tx.oncomplete = () => resolve(result);
+          tx.onerror = () => reject(tx.error);
+        });
+      }
+      async function connect() {
+        try {
+          if (!window.showDirectoryPicker) {
+            status(
+              "Live folder access needs Chrome or Edge. Use Open images, drop, or paste instead.",
+            );
+            $("fileInput").click();
+            return;
+          }
+          let handle = directory;
+          if (handle && (await handle.queryPermission({ mode: "read" })) !== "granted") {
+            if ((await handle.requestPermission({ mode: "read" })) !== "granted") return;
+          } else {
+            handle = await showDirectoryPicker({
+              id: "screensho-screenshots",
+              startIn: directory || "pictures",
+              mode: "read",
+            });
+          }
+          directory = handle;
+          try {
+            await storedHandle(handle);
+          } catch {
+            toast("Folder connected for this session. Browser storage is unavailable.");
+          }
+          folderUI();
+          await scan();
+        } catch (e) {
+          if (e.name === "AbortError") {
+            if (!directory)
+              status(
+                "Choose a Screenshots subfolder. Chrome blocks the whole Desktop; see folder setup for help.",
+              );
+          } else if (e.name === "SecurityError" || e.name === "NotAllowedError") {
+            document.querySelector(".setup").open = true;
+            status(
+              "Choose a Screenshots subfolder, not the whole Desktop. You can also use Open images.",
+            );
+            toast("Folder access was blocked. Choose a Screenshots subfolder.");
+          } else report(e);
+        }
+      }
+      function folderUI() {
+        if (!directory) return;
+        $("folderName").textContent = directory.name;
+        $("folderHint").textContent = "Watching for new screenshots. Read-only access.";
+        $("connect").textContent = "Change Screenshots folder";
+      }
+      async function scan() {
+        if (!directory || scanning || document.hidden) return;
+        scanning = true;
+        try {
+          if ((await directory.queryPermission({ mode: "read" })) !== "granted") {
+            $("connect").textContent = "Reconnect Screenshots folder";
+            $("folderHint").textContent = "Click Reconnect to allow folder access again.";
+            return;
+          }
+          const found = [];
+          for await (const handle of directory.values()) {
+            if (handle.kind === "file" && /\.(png|jpe?g|webp|gif|avif|bmp)$/i.test(handle.name))
+              found.push(handle);
+          }
+          // Read metadata in batches, so a large Screenshots folder does not exhaust file descriptors.
+          const files = [];
+          for (let i = 0; i < found.length; i += 20) {
+            const batch = await Promise.all(
+              found.slice(i, i + 20).map(async (handle) => {
+                try {
+                  const file = await handle.getFile();
+                  return { id: "folder:" + file.name, file, handle };
+                } catch {
+                  return null;
+                }
+              }),
+            );
+            files.push(...batch.filter(Boolean));
+          }
+          files.sort(
+            (a, b) =>
+              b.file.lastModified - a.file.lastModified || a.file.name.localeCompare(b.file.name),
+          );
+          const recent = files.slice(0, 100);
+          const oldSignature = entries
+            .map((e) => e.id + ":" + e.file.lastModified + ":" + e.file.size)
+            .join("|");
+          const imported = entries.filter((e) => !e.handle);
+          entries = [...recent, ...imported];
+          const signature = entries
+            .map((e) => e.id + ":" + e.file.lastModified + ":" + e.file.size)
+            .join("|");
+          if (signature !== oldSignature) {
+            renderList();
+            if (!selected && entries.length) await selectEntry(entries[0]);
+            else if (recent.length && recent[0].id !== selected?.id)
+              status("New captures are at the top of the list. Your current edit stays open.");
+          }
+          if (!entries.length)
+            status("No screenshots found. Take one with ⌘⇧4, or import an image.");
+        } catch (e) {
+          status("Folder could not be read. Reconnect to try again.");
+          console.error(e);
+        } finally {
+          scanning = false;
+        }
+      }
+      const thumbURLs = new Map();
+      function renderList() {
+        for (const url of thumbURLs.values()) URL.revokeObjectURL(url);
+        thumbURLs.clear();
+        const list = $("files");
+        list.replaceChildren();
+        $("count").textContent = entries.length ? `(${entries.length})` : "";
+        const query = $("filter").value.toLocaleLowerCase();
+        const visible = entries.filter((e) => e.file.name.toLocaleLowerCase().includes(query));
+        for (const entry of visible) {
+          const button = document.createElement("button");
+          button.className = "shot" + (selected?.id === entry.id ? " active" : "");
+          button.setAttribute("aria-pressed", String(selected?.id === entry.id));
+          button.title = entry.file.name;
+          const img = document.createElement("img");
+          img.className = "thumb";
+          img.alt = "";
+          img.loading = "lazy";
+          const url = URL.createObjectURL(entry.file);
+          thumbURLs.set(entry.id, url);
+          img.src = url;
+          const info = document.createElement("span"),
+            name = document.createElement("b"),
+            time = document.createElement("small");
+          name.textContent = entry.file.name;
+          time.textContent = new Date(entry.file.lastModified).toLocaleString(undefined, {
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+          info.append(name, time);
+          button.append(img, info);
+          button.onclick = () => selectEntry(entry).catch(report);
+          list.append(button);
+        }
+        if (!visible.length) {
+          const empty = document.createElement("div");
+          empty.className = "listempty";
+          empty.textContent = query
+            ? "No matching screenshots."
+            : "No captures yet. Take a screenshot or import an image.";
+          list.append(empty);
+        }
+      }
+      async function decode(file) {
+        const url = URL.createObjectURL(file);
+        try {
+          const img = new Image();
+          img.src = url;
+          await img.decode();
+          if (!validSize(img.naturalWidth, img.naturalHeight))
+            throw new Error(
+              "Image is too large. Use an image under 40 megapixels and 16,384 px per side.",
+            );
+          return img;
+        } finally {
+          URL.revokeObjectURL(url);
+        }
+      }
+      async function selectEntry(entry) {
+        if (busy || selected?.id === entry.id) return;
+        if (
+          dirty &&
+          !confirm(
+            "Open another screenshot? Current edits will be discarded. Copy or save first if you need them.",
+          )
+        )
+          return;
+        const token = ++loadToken;
+        busy = true;
+        updateControls();
+        try {
+          const img = await decode(entry.file);
+          if (token !== loadToken) return;
+          cancelCrop();
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          ctx.drawImage(img, 0, 0);
+          original = img;
+          selected = entry;
+          history = [];
+          dirty = false;
+          fitMode = true;
+          $("filename").textContent = entry.file.name;
+          $("empty").hidden = true;
+          $("stage").hidden = false;
+          renderList();
+          fit();
+          status("Drag to crop, set a size, then copy. Your original file stays untouched.");
+        } finally {
+          busy = false;
+          updateControls();
+        }
+      }
+      function updateControls() {
+        const ready = !!selected && !busy;
+        for (const id of [
+          "crop",
+          "resize",
+          "reset",
+          "copy",
+          "download",
+          "zoomIn",
+          "zoomOut",
+          "fit",
+          "actual",
+        ])
+          $(id).disabled = !ready;
+        $("undo").disabled = !ready || history.length === 0;
+        $("dimensions").textContent = selected
+          ? `${canvas.width.toLocaleString()} × ${canvas.height.toLocaleString()} px${dirty ? " · edited" : ""}`
+          : "No image selected";
+      }
+      function setZoom(value) {
+        zoom = Math.max(0.02, Math.min(8, value));
+        $("paper").style.width = canvas.width * zoom + "px";
+        $("paper").style.height = canvas.height * zoom + "px";
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
+        $("zoomValue").textContent = Math.round(zoom * 100) + "%";
+        drawSelection();
+      }
+      function fit() {
+        if (!selected) return;
+        fitMode = true;
+        setZoom(
+          Math.min(
+            1,
+            Math.max(20, $("workspace").clientWidth - 110) / canvas.width,
+            Math.max(20, $("workspace").clientHeight - 110) / canvas.height,
+          ),
+        );
+      }
+      function snapshot() {
+        if (history.length >= 8) history.shift();
+        history.push({ url: canvas.toDataURL("image/png"), dirty });
+      }
+      function changed() {
+        dirty = true;
+        cancelCrop();
+        if (fitMode) fit();
+        else setZoom(zoom);
+        updateControls();
+      }
+      function cancelCrop() {
+        cropMode = false;
+        cropRect = null;
+        drag = null;
+        $("paper").classList.remove("cropping");
+        $("crop").classList.remove("selected");
+        $("cropbar").hidden = true;
+        $("selection").hidden = true;
+      }
+      function drawSelection() {
+        if (!cropRect) {
+          $("selection").hidden = true;
+          return;
+        }
+        const r = cropRect;
+        Object.assign($("selection").style, {
+          left: r.x * zoom + "px",
+          top: r.y * zoom + "px",
+          width: r.w * zoom + "px",
+          height: r.h * zoom + "px",
+        });
+        $("selection").hidden = false;
+      }
+      function point(event) {
+        const r = canvas.getBoundingClientRect();
+        return {
+          x: Math.max(
+            0,
+            Math.min(canvas.width, Math.round(((event.clientX - r.left) * canvas.width) / r.width)),
+          ),
+          y: Math.max(
+            0,
+            Math.min(
+              canvas.height,
+              Math.round(((event.clientY - r.top) * canvas.height) / r.height),
+            ),
+          ),
+        };
+      }
+      $("paper").onpointerdown = (e) => {
+        if (!cropMode || busy || e.button !== 0) return;
+        e.preventDefault();
+        drag = point(e);
+        cropRect = null;
+        $("paper").setPointerCapture(e.pointerId);
+      };
+      $("paper").onpointermove = (e) => {
+        if (!drag) return;
+        const p = point(e);
+        cropRect = {
+          x: Math.min(drag.x, p.x),
+          y: Math.min(drag.y, p.y),
+          w: Math.abs(p.x - drag.x),
+          h: Math.abs(p.y - drag.y),
+        };
+        drawSelection();
+        $("applyCrop").disabled = cropRect.w < 1 || cropRect.h < 1;
+        $("cropHint").textContent = `${cropRect.w} × ${cropRect.h} px selected`;
+      };
+      $("paper").onpointerup = () => (drag = null);
+      $("paper").onpointercancel = () => {
+        drag = null;
+      };
+      $("crop").onclick = () => {
+        if (cropMode) {
+          cancelCrop();
+          return;
+        }
+        cropMode = true;
+        $("paper").classList.add("cropping");
+        $("crop").classList.add("selected");
+        $("cropbar").hidden = false;
+        $("cropHint").textContent = "Drag over the image to select an area.";
+        $("applyCrop").disabled = true;
+      };
+      $("cancelCrop").onclick = cancelCrop;
+      $("applyCrop").onclick = () => {
+        if (!cropRect || cropRect.w < 1 || cropRect.h < 1) return;
+        try {
+          const r = { ...cropRect };
+          const temp = document.createElement("canvas");
+          temp.width = r.w;
+          temp.height = r.h;
+          temp.getContext("2d").drawImage(canvas, r.x, r.y, r.w, r.h, 0, 0, r.w, r.h);
+          snapshot();
+          canvas.width = r.w;
+          canvas.height = r.h;
+          ctx.drawImage(temp, 0, 0);
+          changed();
+          status("Cropped. Copy your image whenever it is ready.");
+        } catch (e) {
+          report(e);
+        }
+      };
+      $("resize").onclick = () => {
+        cancelCrop();
+        $("width").value = canvas.width;
+        $("height").value = canvas.height;
+        $("resizeDialog").showModal();
+      };
+      $("width").oninput = () => {
+        if ($("lock").checked)
+          $("height").value = Math.max(
+            1,
+            Math.round((Number($("width").value) * canvas.height) / canvas.width),
+          );
+      };
+      $("height").oninput = () => {
+        if ($("lock").checked)
+          $("width").value = Math.max(
+            1,
+            Math.round((Number($("height").value) * canvas.width) / canvas.height),
+          );
+      };
+      $("cancelResize").onclick = () => $("resizeDialog").close();
+      $("resizeForm").onsubmit = (e) => {
+        e.preventDefault();
+        const w = Number($("width").value),
+          h = Number($("height").value);
+        if (!validSize(w, h)) {
+          toast("Choose dimensions under 16,384 px per side and 40 megapixels.");
+          return;
+        }
+        try {
+          const temp = document.createElement("canvas");
+          temp.width = w;
+          temp.height = h;
+          const t = temp.getContext("2d");
+          t.imageSmoothingEnabled = true;
+          t.imageSmoothingQuality = "high";
+          t.drawImage(canvas, 0, 0, w, h);
+          snapshot();
+          canvas.width = w;
+          canvas.height = h;
+          ctx.drawImage(temp, 0, 0);
+          $("resizeDialog").close();
+          changed();
+          status("Resized. Copy and save use these exact dimensions.");
+        } catch (error) {
+          report(error);
+        }
+      };
+      async function undo() {
+        if (!history.length || busy) return;
+        busy = true;
+        updateControls();
+        try {
+          const previous = history[history.length - 1],
+            img = new Image();
+          img.src = previous.url;
+          await img.decode();
+          history.pop();
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+          dirty = previous.dirty;
+          cancelCrop();
+          if (fitMode) fit();
+          else setZoom(zoom);
+          status("Undid the last edit.");
+        } catch (e) {
+          report(e);
+        } finally {
+          busy = false;
+          updateControls();
+        }
+      }
+      $("undo").onclick = undo;
+      $("reset").onclick = () => {
+        snapshot();
+        canvas.width = original.naturalWidth;
+        canvas.height = original.naturalHeight;
+        ctx.drawImage(original, 0, 0);
+        dirty = false;
+        cancelCrop();
+        fit();
+        updateControls();
+        status("Back to the original. You can undo this reset.");
+      };
+      function png() {
+        return new Promise((resolve, reject) =>
+          canvas.toBlob(
+            (blob) => (blob ? resolve(blob) : reject(new Error("Could not create the PNG."))),
+            "image/png",
+          ),
+        );
+      }
+      $("copy").onclick = async () => {
+        try {
+          if (!navigator.clipboard?.write || !window.ClipboardItem)
+            throw new Error(
+              "Image clipboard is unavailable. Use Chrome, or Save PNG and drag it into your chat.",
+            );
+          await navigator.clipboard.write([new ClipboardItem({ "image/png": png() })]);
+          toast("Copied. Ready to paste with ⌘V.");
+          status(
+            `Copied ${canvas.width} × ${canvas.height} px PNG. Paste into a chat or Dro with ⌘V.`,
+          );
+        } catch (e) {
+          status("Copy was blocked. Allow clipboard access in your browser, or use Save PNG.");
+          toast("Could not copy. Allow clipboard access or use Save PNG.");
+          console.error(e);
+        }
+      };
+      $("download").onclick = async () => {
+        try {
+          const blob = await png(),
+            url = URL.createObjectURL(blob),
+            a = document.createElement("a");
+          a.href = url;
+          a.download =
+            (selected.file.name.replace(/\.[^.]+$/, "") || "screenshot") + "-screensho.png";
+          a.click();
+          setTimeout(() => URL.revokeObjectURL(url), 10000);
+          toast("PNG saved to your downloads.");
+        } catch (e) {
+          report(e);
+        }
+      };
+      $("zoomIn").onclick = () => {
+        fitMode = false;
+        setZoom(zoom * 1.25);
+      };
+      $("zoomOut").onclick = () => {
+        fitMode = false;
+        setZoom(zoom / 1.25);
+      };
+      $("fit").onclick = fit;
+      $("actual").onclick = () => {
+        fitMode = false;
+        setZoom(1);
+      };
+      $("workspace").addEventListener(
+        "wheel",
+        (e) => {
+          if (selected && (e.ctrlKey || e.metaKey)) {
+            e.preventDefault();
+            fitMode = false;
+            setZoom(zoom * Math.exp(-e.deltaY * 0.01));
+          }
+        },
+        { passive: false },
+      );
+      new ResizeObserver(() => {
+        if (fitMode && selected) fit();
+      }).observe($("workspace"));
+      async function importFiles(files) {
+        const images = Array.from(files).filter(imageFile);
+        if (!images.length) {
+          toast("Choose an image file such as PNG, JPEG, or WebP.");
+          return;
+        }
+        const added = images.map((file, i) => ({ id: "import:" + Date.now() + ":" + i, file }));
+        entries = [...added, ...entries].slice(0, 100);
+        renderList();
+        await selectEntry(added[0]);
+      }
+      $("fileInput").onchange = (e) => {
+        importFiles(e.target.files).catch(report);
+        e.target.value = "";
+      };
+      for (const id of ["import", "openFiles"]) $(id).onclick = () => $("fileInput").click();
+      for (const id of ["connect", "start"]) $(id).onclick = connect;
+      $("refresh").onclick = () => {
+        if (directory) scan();
+        else connect();
+      };
+      $("filter").oninput = renderList;
+      let dragDepth = 0;
+      document.addEventListener("dragenter", (e) => {
+        if (e.dataTransfer.types.includes("Files")) {
+          e.preventDefault();
+          dragDepth++;
+          document.body.classList.add("dragover");
+        }
+      });
+      document.addEventListener("dragover", (e) => {
+        if (e.dataTransfer.types.includes("Files")) e.preventDefault();
+      });
+      document.addEventListener("dragleave", () => {
+        if (--dragDepth <= 0) {
+          dragDepth = 0;
+          document.body.classList.remove("dragover");
+        }
+      });
+      document.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dragDepth = 0;
+        document.body.classList.remove("dragover");
+        importFiles(e.dataTransfer.files).catch(report);
+      });
+      document.addEventListener("paste", (e) => {
+        if (e.target.matches("input,textarea")) return;
+        const files = Array.from(e.clipboardData?.files || []).filter(imageFile);
+        if (files.length) {
+          e.preventDefault();
+          importFiles(files).catch(report);
+        }
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.target.matches("input,textarea") || $("resizeDialog").open) return;
+        if (e.key === "Escape") cancelCrop();
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z" && !e.shiftKey) {
+          e.preventDefault();
+          undo();
+        }
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "c" && selected) {
+          e.preventDefault();
+          $("copy").click();
+        }
+      });
+      window.addEventListener("beforeunload", (e) => {
+        if (dirty) {
+          e.preventDefault();
+          e.returnValue = "";
+        }
+      });
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) scan();
+      });
+      window.addEventListener("focus", scan);
+      setInterval(scan, 2500);
+      (async () => {
+        try {
+          db = await openDB();
+          directory = await storedHandle();
+          if (directory) {
+            folderUI();
+            if ((await directory.queryPermission({ mode: "read" })) === "granted") await scan();
+            else {
+              $("connect").textContent = "Reconnect Screenshots folder";
+              $("folderHint").textContent = "Your folder is remembered. Click to allow access.";
+            }
+          }
+        } catch {
+          status(
+            "Browser storage is unavailable. Connect a folder for this session, or import images.",
+          );
+        }
+        if (!window.showDirectoryPicker) {
+          $("folderHint").textContent =
+            "Use Chrome for live folder access. You can still open, drop, or paste images.";
+          $("connect").textContent = "Open images";
+          $("start").textContent = "Open images";
+        }
+      })();
+    </script>
+  </body>
 </html>
