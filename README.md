@@ -11,7 +11,7 @@ A small, personal screenshot editor in one HTML file. Pick a capture, crop or re
 Use the [live version](https://airokz.github.io/Screensho/) (the same file, still with no outgoing requests once loaded), or download `index.html` and open it in a desktop browser. That is the whole application, including its logo and favicon. No install, build step, server, account, or internet connection is required.
 
 - Choose your **Screenshots folder**. The latest 100 images appear in the sidebar, newest first, and refresh while the page is visible.
-- Crop by dragging over the image in either direction, then click **Apply crop**.
+- Crop without switching modes: drag a corner or edge handle, drag inside the selection to move it, or drag anywhere else to draw a new area. **Copy image** and **Save PNG** use the selected area directly; **Apply crop** (or Enter) is only needed to keep editing the cropped image.
 - Resize to exact pixel dimensions, with proportions locked by default.
 - Zoom, fit, and view at 1:1 without changing the output size.
 - Undo edits, reset to the original, or download a separate PNG.
@@ -38,7 +38,8 @@ Screensho requests read access only. It remembers the folder in browser storage,
 | Cmd/Ctrl+C             | Copy edited PNG             |
 | Cmd/Ctrl+V             | Import image from clipboard |
 | Cmd/Ctrl+Z             | Undo                        |
-| Escape                 | Cancel crop selection       |
+| Enter                  | Apply crop to the selection |
+| Escape                 | Select the whole image      |
 | Cmd/Ctrl + mouse wheel | Zoom                        |
 
 ## Your files and privacy
