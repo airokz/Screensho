@@ -168,6 +168,40 @@ const { pathToFileURL } = require("node:url");
     assert.deepEqual(await page.evaluate(() => cropRect), { x: 0, y: 0, w: 500, h: 300 });
     await page.locator("#undo").click();
     await page.waitForFunction(() => !busy && canvas.width === 800);
+    // Undoing the crop also restores the selection it was made from.
+    assert.deepEqual(await page.evaluate(() => [cropRect, dirty]), [
+      { x: 300, y: 100, w: 500, h: 300 },
+      false,
+    ]);
+    // Redo brings the crop back; undo again returns to the uncropped image.
+    await page.keyboard.press("ControlOrMeta+Shift+z");
+    await page.waitForFunction(() => !busy && canvas.width === 500);
+    assert.equal(await page.evaluate(() => dirty), true);
+    await page.keyboard.press("ControlOrMeta+z");
+    await page.waitForFunction(() => !busy && canvas.width === 800);
+    // Every selection change is undoable: the edge drag, the move, and the corner drag above.
+    const undoSelection = async (expected) => {
+      await page.keyboard.press("ControlOrMeta+z");
+      await page.waitForFunction(() => !busy);
+      assert.deepEqual(await page.evaluate(() => cropRect), expected);
+    };
+    await undoSelection({ x: 200, y: 100, w: 600, h: 300 });
+    await undoSelection({ x: 0, y: 0, w: 600, h: 300 });
+    await undoSelection({ x: 0, y: 0, w: 800, h: 400 });
+    // Escape (select all) is undoable too, and a new action clears redo.
+    await page.keyboard.press("ControlOrMeta+Shift+z");
+    await page.waitForFunction(() => !busy);
+    assert.deepEqual(await page.evaluate(() => cropRect), { x: 0, y: 0, w: 600, h: 300 });
+    await page.keyboard.press("Escape");
+    assert.deepEqual(await page.evaluate(() => [cropRect, future.length]), [
+      { x: 0, y: 0, w: 800, h: 400 },
+      0,
+    ]);
+    assert.equal(await page.locator("#redo").isDisabled(), true);
+    await undoSelection({ x: 0, y: 0, w: 600, h: 300 });
+    await page.keyboard.press("Escape");
+    // Image edits stay capped at 8 snapshots while cheap selection steps remain.
+    assert.ok(await page.evaluate(() => history.filter((h) => h.url).length <= 8));
     await page.locator("#resize").click();
     await page.locator("#width").fill("400");
     assert.equal(await page.locator("#height").inputValue(), "200");
@@ -295,7 +329,7 @@ const { pathToFileURL } = require("node:url");
     await fs.mkdir(path.resolve(__dirname, "../test-results"), { recursive: true });
     await page.screenshot({ path: path.resolve(__dirname, "../test-results/editor.png") });
     console.log(
-      "PASS: file:// launch, import, crop pixels, reverse crop, cancel, corner/edge/move selection, copy selection without applying, resize, undo/reset, native PNG clipboard, paste into Dro, PNG download, folder ordering/refresh/filter/deletion, safe filenames, responsive layout, no outgoing requests.",
+      "PASS: file:// launch, import, crop pixels, reverse crop, cancel, corner/edge/move selection, copy selection without applying, undo/redo for crops and every selection change, resize, undo/reset, native PNG clipboard, paste into Dro, PNG download, folder ordering/refresh/filter/deletion, safe filenames, responsive layout, no outgoing requests.",
     );
   } finally {
     await browser.close();

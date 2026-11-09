@@ -14,7 +14,7 @@ Use the [live version](https://airokz.github.io/Screensho/) (the same file, stil
 - Crop without switching modes: drag a corner or edge handle, drag inside the selection to move it, or drag anywhere else to draw a new area. **Copy image** and **Save PNG** use the selected area directly; **Apply crop** (or Enter) is only needed to keep editing the cropped image.
 - Resize to exact pixel dimensions, with proportions locked by default.
 - Zoom, fit, and view at 1:1 without changing the output size.
-- Undo edits, reset to the original, or download a separate PNG.
+- Undo and redo every crop, resize, reset, and selection change, reset to the original, or download a separate PNG. Zoom only changes the view, so it is not part of undo.
 - Click **Copy image**, then paste the PNG into a chat or Dro with Cmd/Ctrl+V.
 - Import images with **Open images**, file drag-and-drop, or Cmd/Ctrl+V.
 
@@ -38,6 +38,7 @@ Screensho requests read access only. It remembers the folder in browser storage,
 | Cmd/Ctrl+C             | Copy edited PNG             |
 | Cmd/Ctrl+V             | Import image from clipboard |
 | Cmd/Ctrl+Z             | Undo                        |
+| Cmd/Ctrl+Shift+Z       | Redo (Ctrl+Y also works)    |
 | Enter                  | Apply crop to the selection |
 | Escape                 | Select the whole image      |
 | Cmd/Ctrl + mouse wheel | Zoom                        |
@@ -48,7 +49,7 @@ Screensho has no analytics, accounts, remote fonts, or outgoing network requests
 
 **Copy or download important edits.** Edits are held in memory and are not restored after closing. Switching images asks before discarding edits; closing an edited page triggers the browser's unsaved-work prompt. Folder permission is a best-effort saved preference and can be cleared or tied to the HTML location. Saving downloads a new `-screensho.png` file; it never overwrites the original.
 
-The connected folder includes PNG, JPEG, WebP, GIF, AVIF, and BMP images, including renamed captures. Scanning is limited to that folder without recursion. Animated files become a still image. Images are limited to 40 megapixels and 16,384 pixels per side. Undo keeps up to eight previous edits; large images can still use substantial memory.
+The connected folder includes PNG, JPEG, WebP, GIF, AVIF, and BMP images, including renamed captures. Scanning is limited to that folder without recursion. Animated files become a still image. Images are limited to 40 megapixels and 16,384 pixels per side. Undo keeps up to eight previous image edits plus selection changes, per image; switching images starts a fresh history. Large images can still use substantial memory.
 
 ## Scope and browser support
 
@@ -67,7 +68,7 @@ npm ci
 npm test
 ```
 
-`CHROME_PATH` overrides the Chrome executable path. The Dro paste check uses `DRO_PATH`, or a Dro checkout next to Screensho, and is skipped when neither exists. GitHub Actions runs the tests on every push and pull request. Tests open the HTML using `file://`, generate their own image fixtures, and cover crop pixels, resize, zoom invariance, undo/reset, real PNG clipboard data, pasting into the sibling Dro checkout, download dimensions, folder ordering and refresh, renamed captures, filtering, disappearing files, safe filenames, responsive layout, and no outgoing requests. Clipboard tests temporarily replace the clipboard with a generated image. Native folder dialogs and permission restoration in your normal Chrome profile require a manual check; permission errors and picker options use test fixtures.
+`CHROME_PATH` overrides the Chrome executable path. The Dro paste check uses `DRO_PATH`, or a Dro checkout next to Screensho, and is skipped when neither exists. GitHub Actions runs the tests on every push and pull request. Tests open the HTML using `file://`, generate their own image fixtures, and cover crop pixels, selection handles, resize, zoom invariance, undo/redo/reset, real PNG clipboard data, pasting into the sibling Dro checkout, download dimensions, folder ordering and refresh, renamed captures, filtering, disappearing files, safe filenames, responsive layout, and no outgoing requests. Clipboard tests temporarily replace the clipboard with a generated image. Native folder dialogs and permission restoration in your normal Chrome profile require a manual check; permission errors and picker options use test fixtures.
 
 Run `npm run preview` to regenerate `docs/screenshot.png` from the fictional captures in `docs/examples/`. No personal screenshots are used.
 

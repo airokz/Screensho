@@ -745,6 +745,7 @@
         ><button id="resize" disabled>↔ &nbsp;Resize</button>
         <div class="divider"></div>
         <button id="undo" disabled title="Undo (⌘Z)">↶ Undo</button
+        ><button id="redo" disabled title="Redo (⇧⌘Z)">↷ Redo</button
         ><button id="reset" disabled>Reset</button>
         <div class="spacer"></div>
         <div class="zoom">
@@ -823,6 +824,7 @@
         selected = null,
         original = null,
         history = [],
+        future = [],
         dirty = false,
         zoom = 1,
         fitMode = true,
@@ -1078,6 +1080,7 @@
           selected = entry;
           cancelCrop();
           history = [];
+          future = [];
           dirty = false;
           fitMode = true;
           $("filename").textContent = entry.file.name;
@@ -1106,6 +1109,7 @@
         ])
           $(id).disabled = !ready;
         $("undo").disabled = !ready || history.length === 0;
+        $("redo").disabled = !ready || future.length === 0;
         $("crop").disabled = !ready || !partial();
         $("dimensions").textContent = selected
           ? `${canvas.width.toLocaleString()} × ${canvas.height.toLocaleString()} px${dirty ? " · edited" : ""}`
@@ -1131,9 +1135,27 @@
           ),
         );
       }
+      // Undo history. Every entry restores the selection; entries with a url also restore the
+      // image. Image entries are capped at 8 because each holds a full PNG; selection-only entries
+      // are cheap. Any new action clears redo.
+      function state(withImage) {
+        return {
+          url: withImage ? canvas.toDataURL("image/png") : null,
+          dirty,
+          rect: cropRect && { ...cropRect },
+        };
+      }
+      function remember(entry) {
+        history.push(entry);
+        future = [];
+        while (history.length > 100 || history.filter((h) => h.url).length > 8) history.shift();
+        updateControls();
+      }
       function snapshot() {
-        if (history.length >= 8) history.shift();
-        history.push({ url: canvas.toDataURL("image/png"), dirty });
+        remember(state(true));
+      }
+      function sameRect(a, b) {
+        return !!a && !!b && a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h;
       }
       function changed() {
         dirty = true;
@@ -1205,6 +1227,7 @@
           mode: handle || (e.target.id === "selection" ? "move" : "new"),
           start: p,
           rect: { ...cropRect },
+          before: state(false),
         };
         if (drag.mode === "new") cropRect = { x: p.x, y: p.y, w: 0, h: 0 };
         $("paper").setPointerCapture(e.pointerId);
@@ -1244,15 +1267,23 @@
       };
       function endDrag() {
         if (!drag) return;
+        const before = drag.before;
         drag = null;
         // A click without dragging, or a zero-size area, selects the whole image again.
         if (!cropRect || cropRect.w < 1 || cropRect.h < 1) cancelCrop();
         else drawSelection();
+        if (!sameRect(before.rect, cropRect)) remember(before);
       }
       $("paper").onpointerup = endDrag;
       $("paper").onpointercancel = endDrag;
       $("crop").onclick = () => $("applyCrop").click();
-      $("cancelCrop").onclick = cancelCrop;
+      function selectAll() {
+        if (!partial()) return;
+        remember(state(false));
+        cancelCrop();
+        updateControls();
+      }
+      $("cancelCrop").onclick = selectAll;
       $("applyCrop").onclick = () => {
         if (!partial() || cropRect.w < 1 || cropRect.h < 1) return;
         try {
@@ -1319,32 +1350,48 @@
           report(error);
         }
       };
-      async function undo() {
-        if (!history.length || busy) return;
-        busy = true;
-        updateControls();
-        try {
-          const previous = history[history.length - 1],
-            img = new Image();
-          img.src = previous.url;
+      async function restore(entry) {
+        if (entry.url) {
+          const img = new Image();
+          img.src = entry.url;
           await img.decode();
-          history.pop();
           canvas.width = img.width;
           canvas.height = img.height;
           ctx.drawImage(img, 0, 0);
-          dirty = previous.dirty;
-          cancelCrop();
-          if (fitMode) fit();
-          else setZoom(zoom);
-          status("Undid the last edit.");
+        }
+        dirty = entry.dirty;
+        const r = entry.rect;
+        if (r && r.x >= 0 && r.y >= 0 && r.x + r.w <= canvas.width && r.y + r.h <= canvas.height)
+          cropRect = { ...r };
+        else cancelCrop();
+        drag = null;
+        if (entry.url && fitMode) fit();
+        else setZoom(zoom);
+      }
+      // Undo and redo move one entry between the stacks, saving the current state in its place.
+      async function step(from, to, done) {
+        if (!from.length || busy || drag) return;
+        busy = true;
+        updateControls();
+        try {
+          const entry = from[from.length - 1];
+          const current = state(!!entry.url);
+          await restore(entry);
+          from.pop();
+          to.push(current);
+          status(done + (entry.url ? " the last edit." : " the selection change."));
         } catch (e) {
           report(e);
         } finally {
           busy = false;
           updateControls();
+          drawSelection();
         }
       }
+      const undo = () => step(history, future, "Undid");
+      const redo = () => step(future, history, "Redid");
       $("undo").onclick = undo;
+      $("redo").onclick = redo;
       $("reset").onclick = () => {
         snapshot();
         canvas.width = original.naturalWidth;
@@ -1487,11 +1534,15 @@
       });
       document.addEventListener("keydown", (e) => {
         if (e.target.matches("input,textarea") || $("resizeDialog").open) return;
-        if (e.key === "Escape") cancelCrop();
+        if (e.key === "Escape") selectAll();
         if (e.key === "Enter" && partial() && !e.target.matches("button")) $("applyCrop").click();
-        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z" && !e.shiftKey) {
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") {
           e.preventDefault();
-          undo();
+          e.shiftKey ? redo() : undo();
+        }
+        if (e.ctrlKey && !e.metaKey && e.key.toLowerCase() === "y") {
+          e.preventDefault();
+          redo();
         }
         if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "c" && selected) {
           e.preventDefault();
