@@ -122,14 +122,24 @@ const { pathToFileURL } = require("node:url");
       return { type: blob.type, width: bitmap.width, height: bitmap.height };
     });
     assert.deepEqual(clipboard, { type: "image/png", width: 400, height: 200 });
-    // Paste through the actual clipboard into the adjacent Dro checkout.
-    const dro = await context.newPage();
-    await dro.goto(pathToFileURL(path.resolve(__dirname, "../../Dro/whiteboard.html")).href);
-    await dro.keyboard.press("Meta+v");
-    await dro.waitForFunction(() => nodes.some((n) => n.type === "image"));
-    const pasted = await dro.evaluate(() => nodes.find((n) => n.type === "image"));
-    assert.equal(pasted.w / pasted.h, 2);
-    await dro.close();
+    // Paste through the actual clipboard into Dro, when a checkout is available.
+    const droPath = process.env.DRO_PATH || path.resolve(__dirname, "../../Dro/whiteboard.html");
+    if (
+      await fs.access(droPath).then(
+        () => true,
+        () => false,
+      )
+    ) {
+      const dro = await context.newPage();
+      await dro.goto(pathToFileURL(droPath).href);
+      await dro.keyboard.press("ControlOrMeta+v");
+      await dro.waitForFunction(() => nodes.some((n) => n.type === "image"));
+      const pasted = await dro.evaluate(() => nodes.find((n) => n.type === "image"));
+      assert.equal(pasted.w / pasted.h, 2);
+      await dro.close();
+    } else {
+      console.log("Skipping Dro paste check: set DRO_PATH or check out Dro next to Screensho.");
+    }
     await page.bringToFront();
     const downloadEvent = page.waitForEvent("download");
     await page.locator("#download").click();

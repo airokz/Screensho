@@ -43,7 +43,7 @@ Screensho requests read access only. It remembers the folder in browser storage,
 
 ## Your files and privacy
 
-Screensho has no analytics, accounts, remote fonts, or outgoing network requests. Your images stay in browser memory, browser storage, and files you choose to save. The private repository contains application code and fictional example artwork, not your screenshots.
+Screensho has no analytics, accounts, remote fonts, or outgoing network requests. A Content-Security-Policy in `index.html` makes the browser block any network request, so this does not rely on trust: you can check it in the page source. Your images stay in browser memory, browser storage, and files you choose to save. The private repository contains application code and fictional example artwork, not your screenshots.
 
 **Copy or download important edits.** Edits are held in memory and are not restored after closing. Switching images asks before discarding edits; closing an edited page triggers the browser's unsaved-work prompt. Folder permission is a best-effort saved preference and can be cleared or tied to the HTML location. Saving downloads a new `-screensho.png` file; it never overwrites the original.
 
@@ -66,12 +66,16 @@ npm ci
 npm test
 ```
 
-`CHROME_PATH` overrides the Chrome executable path. Tests open the HTML using `file://`, generate their own image fixtures, and cover crop pixels, resize, zoom invariance, undo/reset, real PNG clipboard data, pasting into the sibling Dro checkout, download dimensions, folder ordering and refresh, renamed captures, filtering, disappearing files, safe filenames, responsive layout, and no outgoing requests. Clipboard tests temporarily replace the clipboard with a generated image. Native folder dialogs and permission restoration in your normal Chrome profile require a manual check; permission errors and picker options use test fixtures.
+`CHROME_PATH` overrides the Chrome executable path. The Dro paste check uses `DRO_PATH`, or a Dro checkout next to Screensho, and is skipped when neither exists. GitHub Actions runs the tests on every push and pull request. Tests open the HTML using `file://`, generate their own image fixtures, and cover crop pixels, resize, zoom invariance, undo/reset, real PNG clipboard data, pasting into the sibling Dro checkout, download dimensions, folder ordering and refresh, renamed captures, filtering, disappearing files, safe filenames, responsive layout, and no outgoing requests. Clipboard tests temporarily replace the clipboard with a generated image. Native folder dialogs and permission restoration in your normal Chrome profile require a manual check; permission errors and picker options use test fixtures.
 
-Run `node tests/preview.cjs` to regenerate `docs/screenshot.png` using the same fictional billing redesign examples from `../Dro/docs/screenshot.png`. No personal screenshots are used.
+Run `npm run preview` to regenerate `docs/screenshot.png` from the fictional captures in `docs/examples/`. No personal screenshots are used.
 
 ### GitHub Pages
 
 The deployment workflow follows Dro's `.github/workflows/pages.yml`: checkout, copy the single HTML into `_site`, configure Pages, upload the artifact, and deploy. Pages publishes the same application with no backend or screenshot uploads.
 
 **Deployment is currently unavailable:** GitHub rejected enabling Pages because the current plan does not support Pages for this private repository. The repository remains private. After switching to a Pages-capable plan, enable **Settings → Pages → Source: GitHub Actions**, set the repository Actions variable `PAGES_ENABLED=true`, and run **Deploy demo to GitHub Pages**. The workflow skips deployment while the repository is private and that variable is unset. No live-demo link is shown until deployment is available.
+
+## License
+
+[Apache License 2.0](LICENSE). The standalone HTML also includes the license so it can be shared on its own. This license covers Screensho's code and bundled example artwork, not screenshots or images you open or edit.
