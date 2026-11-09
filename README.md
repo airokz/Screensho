@@ -2,13 +2,13 @@
 
 A small, personal screenshot editor in one HTML file. Pick a capture, crop or resize it, then copy it into a chat or Dro.
 
-**[Download `index.html`](index.html)** · Open in Chrome and bookmark with Cmd+D.
+**[Try now in your browser →](https://airokz.github.io/Screensho/)** · [Download `index.html`](index.html) · Open in Chrome and bookmark with Cmd+D.
 
 ![Screensho editing the same fictional billing redesign used in Dro: recent captures on the left, an active crop on the right, and Copy image ready in the header](docs/screenshot.png)
 
 ## Use it
 
-Download `index.html` and open it in a desktop browser. That is the whole application, including its logo and favicon. No install, build step, server, account, or internet connection is required.
+Use the [live version](https://airokz.github.io/Screensho/) (the same file, still with no outgoing requests once loaded), or download `index.html` and open it in a desktop browser. That is the whole application, including its logo and favicon. No install, build step, server, account, or internet connection is required.
 
 - Choose your **Screenshots folder**. The latest 100 images appear in the sidebar, newest first, and refresh while the page is visible.
 - Crop by dragging over the image in either direction, then click **Apply crop**.
@@ -43,7 +43,7 @@ Screensho requests read access only. It remembers the folder in browser storage,
 
 ## Your files and privacy
 
-Screensho has no analytics, accounts, remote fonts, or outgoing network requests. A Content-Security-Policy in `index.html` makes the browser block any network request, so this does not rely on trust: you can check it in the page source. Your images stay in browser memory, browser storage, and files you choose to save. The private repository contains application code and fictional example artwork, not your screenshots.
+Screensho has no analytics, accounts, remote fonts, or outgoing network requests. A Content-Security-Policy in `index.html` makes the browser block any network request, so this does not rely on trust: you can check it in the page source. Your images stay in browser memory, browser storage, and files you choose to save. This repository contains application code and fictional example artwork, not your screenshots.
 
 **Copy or download important edits.** Edits are held in memory and are not restored after closing. Switching images asks before discarding edits; closing an edited page triggers the browser's unsaved-work prompt. Folder permission is a best-effort saved preference and can be cleared or tied to the HTML location. Saving downloads a new `-screensho.png` file; it never overwrites the original.
 
@@ -74,7 +74,7 @@ Run `npm run preview` to regenerate `docs/screenshot.png` from the fictional cap
 
 The deployment workflow follows Dro's `.github/workflows/pages.yml`: checkout, copy the single HTML into `_site`, configure Pages, upload the artifact, and deploy. Pages publishes the same application with no backend or screenshot uploads.
 
-**Deployment is currently unavailable:** GitHub rejected enabling Pages because the current plan does not support Pages for this private repository. The repository remains private. After switching to a Pages-capable plan, enable **Settings → Pages → Source: GitHub Actions**, set the repository Actions variable `PAGES_ENABLED=true`, and run **Deploy demo to GitHub Pages**. The workflow skips deployment while the repository is private and that variable is unset. No live-demo link is shown until deployment is available.
+It publishes to [airokz.github.io/Screensho](https://airokz.github.io/Screensho/) on every push to `main` that changes `index.html` or the workflow.
 
 ## License
 

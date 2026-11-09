@@ -2,7 +2,7 @@
   "name": "screensho",
   "version": "1.0.0",
   "private": true,
-  "description": "A private, single-file screenshot workbench for macOS",
+  "description": "A small, offline, single-file screenshot editor",
   "scripts": {
     "test": "node tests/editor.cjs",
     "preview": "node tests/preview.cjs"
