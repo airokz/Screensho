@@ -20,16 +20,36 @@ Use the [live version](https://airokz.github.io/Screensho/) (the same file, stil
 
 New screenshots appear at the top without interrupting the current edit. **Open Dro** opens the sibling local checkout when running from a file, or Dro's browser demo when Screensho is hosted.
 
-### Choose a Screenshots folder on macOS
+### Choose a Screenshots folder
 
-Chrome blocks connecting to the **whole Desktop** (as well as the whole home and Documents folders). A dedicated folder inside Desktop is supported. This is a browser restriction, not a macOS file permission to disable. See [Chromium's directory restrictions](https://chromium.googlesource.com/chromium/src.git/+/7917bc533702fc1e437398610f63563630955292/chrome/browser/file_system_access/chrome_file_system_access_permission_context.cc#304).
+Live folder access uses the browser's File System Access API:
+
+| Browser                           | Live Screenshots folder                                                     |
+| --------------------------------- | --------------------------------------------------------------------------- |
+| Chrome, Edge, Opera, Vivaldi, Arc | Yes                                                                         |
+| Brave                             | Off by default; enable `brave://flags/#file-system-access-api` and relaunch |
+| Firefox, Safari                   | No; use **Open images**, drag-and-drop, or paste instead                    |
+
+**Desktop, Documents, Downloads, and your home folder can't be connected** in any of these browsers. Picking one shows the browser's own _"Can't open this folder because it contains system files"_ dialog. Folders _inside_ them work, so connect a dedicated **Screenshots** subfolder instead. This is a browser security rule, not a macOS or Windows permission you can turn off; see [Chromium's blocked folders](https://chromium.googlesource.com/chromium/src.git/+/7917bc533702fc1e437398610f63563630955292/chrome/browser/file_system_access/chrome_file_system_access_permission_context.cc#304). Choosing individual files with **Open images** is never blocked.
+
+#### macOS
+
+macOS saves screenshots to the Desktop by default, so they need a new folder:
 
 1. In Finder, create a folder named **Screenshots**, for example inside Desktop or Pictures.
-2. Press **Cmd+Shift+5**, open **Options → Other Location…**, and choose that folder as the save location for new captures. This also applies to captures taken with Cmd+Shift+4.
-3. In Screensho, click **Choose Screenshots folder** and select that subfolder.
-4. Move existing captures into the subfolder in Finder if you want them included, or select them individually through **Open images**.
+2. Press **Cmd+Shift+5**, open **Options → Other Location…**, and choose that folder. This also applies to captures taken with Cmd+Shift+3 and Cmd+Shift+4.
+3. In Screensho, click **Choose Screenshots folder** and select that folder.
+4. Move existing captures into it in Finder if you want them listed, or open them individually with **Open images**.
 
-Screensho requests read access only. It remembers the folder in browser storage, but Chrome may require **Reconnect Screenshots folder** after reopening or when permissions expire. Screensho does not change your Mac's screenshot settings or move existing captures automatically.
+#### Windows
+
+Windows already saves screenshots to a subfolder, so there is usually nothing to set up:
+
+1. **Win+PrtScn** and Snipping Tool (Win+Shift+S, with automatic saving on) save to **Pictures\Screenshots**. If OneDrive backs up your Pictures folder, it is **OneDrive\Pictures\Screenshots**.
+2. In Screensho, click **Choose Screenshots folder** and select that folder.
+3. If you save screenshots to the Desktop or Downloads, create a **Screenshots** folder inside it and save there instead.
+
+Screensho requests read access only. It remembers the folder in browser storage, but Chrome may require **Reconnect Screenshots folder** after reopening or when permissions expire. Screensho does not change your system's screenshot settings or move existing captures automatically.
 
 ## Shortcuts
 
@@ -51,7 +71,7 @@ The connected folder includes PNG, JPEG, WebP, GIF, AVIF, and BMP images, includ
 
 ## Scope and browser support
 
-Screensho is a personal desktop screenshot editor. Tested in desktop Chrome. Live folder access requires a supporting Chromium browser. Safari and Firefox can use file import, drag-and-drop, and paste; those browsers have not been verified.
+Screensho is a personal desktop screenshot editor, tested in desktop Chrome on macOS. See [Choose a Screenshots folder](#choose-a-screenshots-folder) for which browsers support a live folder. Other Chromium browsers, Windows, Firefox, and Safari have not been verified.
 
 Clipboard access depends on your browser and permissions. Screensho copies actual PNG data. If copying is blocked, allow clipboard access or download the PNG and drag it into the destination.
 

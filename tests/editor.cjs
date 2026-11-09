@@ -67,8 +67,12 @@ const { pathToFileURL } = require("node:url");
       }
     });
     assert.equal(await page.locator(".setup").getAttribute("open"), "");
-    assert.match(await page.locator("#toast").textContent(), /Desktop\/Screenshots/);
-    assert.match(await page.locator("#folderHint").textContent(), /Desktop\/Screenshots/);
+    assert.match(await page.locator("#toast").textContent(), /whole Desktop/);
+    assert.match(
+      await page.locator("#folderHint").textContent(),
+      /Desktop, Documents, or\s+Downloads/,
+    );
+    assert.match(await page.locator(".setup").textContent(), /Pictures\\Screenshots/);
     await page.locator(".setup summary").click();
     // All test images are generated in memory. Never load the user's screenshots.
     const png = await page.evaluate(() => {
