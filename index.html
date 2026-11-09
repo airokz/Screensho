@@ -369,15 +369,86 @@
         border: 1.5px solid #fff;
         outline: 1px solid var(--accent);
         box-shadow: 0 0 0 15000px #1c183b65;
+        cursor: move;
+      }
+      #selection.full {
         pointer-events: none;
       }
-      #selection:after {
+      #selection.dragging:after {
         content: "";
         position: absolute;
         inset: 33.333%;
         border: 1px solid #ffffff70;
       }
-      .paper.cropping {
+      #selection .h {
+        position: absolute;
+        pointer-events: auto;
+        background: var(--accent);
+        border: 2px solid #fff;
+        border-radius: 4px;
+        box-shadow: 0 1px 5px #1c183b70;
+      }
+      #selection .h:after {
+        content: "";
+        position: absolute;
+        inset: -7px;
+      }
+      [data-h="nw"],
+      [data-h="ne"],
+      [data-h="se"],
+      [data-h="sw"] {
+        width: 14px;
+        height: 14px;
+      }
+      [data-h="n"],
+      [data-h="s"] {
+        width: 28px;
+        height: 8px;
+        left: calc(50% - 14px);
+      }
+      [data-h="e"],
+      [data-h="w"] {
+        width: 8px;
+        height: 28px;
+        top: calc(50% - 14px);
+      }
+      [data-h="nw"],
+      [data-h="ne"],
+      [data-h="n"] {
+        top: 1px;
+      }
+      [data-h="sw"],
+      [data-h="se"],
+      [data-h="s"] {
+        bottom: 1px;
+      }
+      [data-h="nw"],
+      [data-h="sw"],
+      [data-h="w"] {
+        left: 1px;
+      }
+      [data-h="ne"],
+      [data-h="se"],
+      [data-h="e"] {
+        right: 1px;
+      }
+      [data-h="nw"],
+      [data-h="se"] {
+        cursor: nwse-resize;
+      }
+      [data-h="ne"],
+      [data-h="sw"] {
+        cursor: nesw-resize;
+      }
+      [data-h="n"],
+      [data-h="s"] {
+        cursor: ns-resize;
+      }
+      [data-h="e"],
+      [data-h="w"] {
+        cursor: ew-resize;
+      }
+      canvas {
         cursor: crosshair;
       }
       .empty {
@@ -670,7 +741,7 @@
         </div>
       </header>
       <div class="toolbar" aria-label="Image tools">
-        <button id="crop" disabled title="Drag to select a crop area">⌗ &nbsp;Crop</button
+        <button id="crop" disabled title="Crop to the selection (Enter)">⌗ &nbsp;Crop</button
         ><button id="resize" disabled>↔ &nbsp;Resize</button>
         <div class="divider"></div>
         <button id="undo" disabled title="Undo (⌘Z)">↶ Undo</button
@@ -684,15 +755,18 @@
         </div>
       </div>
       <div class="cropbar" id="cropbar" hidden>
-        <span id="cropHint">Drag over the image to select an area.</span
-        ><button id="cancelCrop">Cancel</button
+        <span id="cropHint"></span><button id="cancelCrop">Select all</button
         ><button id="applyCrop" class="primary" disabled>Apply crop</button>
       </div>
       <div class="workspace" id="workspace">
         <div class="stage" id="stage" hidden>
           <div class="paper" id="paper">
             <canvas id="canvas" aria-label="Screenshot being edited"></canvas>
-            <div id="selection" hidden></div>
+            <div id="selection" class="full" hidden>
+              <i class="h" data-h="nw"></i><i class="h" data-h="n"></i><i class="h" data-h="ne"></i
+              ><i class="h" data-h="e"></i><i class="h" data-h="se"></i><i class="h" data-h="s"></i
+              ><i class="h" data-h="sw"></i><i class="h" data-h="w"></i>
+            </div>
           </div>
         </div>
         <div class="empty" id="empty">
@@ -752,7 +826,6 @@
         dirty = false,
         zoom = 1,
         fitMode = true,
-        cropMode = false,
         cropRect = null,
         drag = null,
         scanning = false,
@@ -998,12 +1071,12 @@
         try {
           const img = await decode(entry.file);
           if (token !== loadToken) return;
-          cancelCrop();
           canvas.width = img.naturalWidth;
           canvas.height = img.naturalHeight;
           ctx.drawImage(img, 0, 0);
           original = img;
           selected = entry;
+          cancelCrop();
           history = [];
           dirty = false;
           fitMode = true;
@@ -1012,7 +1085,7 @@
           $("stage").hidden = false;
           renderList();
           fit();
-          status("Drag to crop, set a size, then copy. Your original file stays untouched.");
+          status("Drag a corner or edge to crop, then Copy. Your original file stays untouched.");
         } finally {
           busy = false;
           updateControls();
@@ -1033,6 +1106,7 @@
         ])
           $(id).disabled = !ready;
         $("undo").disabled = !ready || history.length === 0;
+        $("crop").disabled = !ready || !partial();
         $("dimensions").textContent = selected
           ? `${canvas.width.toLocaleString()} × ${canvas.height.toLocaleString()} px${dirty ? " · edited" : ""}`
           : "No image selected";
@@ -1068,16 +1142,22 @@
         else setZoom(zoom);
         updateControls();
       }
+      // The selection always exists while an image is open. It starts as the whole image; drag
+      // a handle or draw a new area to narrow it. Copy and Save use it without applying a crop.
+      function partial() {
+        const r = cropRect;
+        return !!r && (r.x > 0 || r.y > 0 || r.w < canvas.width || r.h < canvas.height);
+      }
       function cancelCrop() {
-        cropMode = false;
-        cropRect = null;
+        cropRect = selected ? { x: 0, y: 0, w: canvas.width, h: canvas.height } : null;
         drag = null;
-        $("paper").classList.remove("cropping");
-        $("crop").classList.remove("selected");
-        $("cropbar").hidden = true;
-        $("selection").hidden = true;
+        drawSelection();
       }
       function drawSelection() {
+        const full = !partial();
+        // The bar stays visible while an image is open so the image never shifts mid-drag.
+        $("cropbar").hidden = !selected;
+        if (selected) $("crop").disabled = busy || full;
         if (!cropRect) {
           $("selection").hidden = true;
           return;
@@ -1089,7 +1169,14 @@
           width: r.w * zoom + "px",
           height: r.h * zoom + "px",
         });
+        $("selection").classList.toggle("full", full);
+        $("selection").classList.toggle("dragging", !!drag);
         $("selection").hidden = false;
+        $("applyCrop").disabled = full;
+        $("cancelCrop").disabled = full;
+        $("cropHint").textContent = full
+          ? "Drag a corner or edge to select part of the image."
+          : `${r.w} × ${r.h} px selected. Copy and Save use this area.`;
       }
       function point(event) {
         const r = canvas.getBoundingClientRect();
@@ -1108,44 +1195,66 @@
         };
       }
       $("paper").onpointerdown = (e) => {
-        if (!cropMode || busy || e.button !== 0) return;
+        if (!selected || busy || e.button !== 0) return;
         e.preventDefault();
-        drag = point(e);
-        cropRect = null;
+        const p = point(e),
+          handle = e.target.dataset?.h;
+        // A handle resizes, the inside of a partial selection moves it, anywhere else starts a
+        // new selection.
+        drag = {
+          mode: handle || (e.target.id === "selection" ? "move" : "new"),
+          start: p,
+          rect: { ...cropRect },
+        };
+        if (drag.mode === "new") cropRect = { x: p.x, y: p.y, w: 0, h: 0 };
         $("paper").setPointerCapture(e.pointerId);
+        drawSelection();
       };
       $("paper").onpointermove = (e) => {
         if (!drag) return;
-        const p = point(e);
-        cropRect = {
-          x: Math.min(drag.x, p.x),
-          y: Math.min(drag.y, p.y),
-          w: Math.abs(p.x - drag.x),
-          h: Math.abs(p.y - drag.y),
-        };
-        drawSelection();
-        $("applyCrop").disabled = cropRect.w < 1 || cropRect.h < 1;
-        $("cropHint").textContent = `${cropRect.w} × ${cropRect.h} px selected`;
-      };
-      $("paper").onpointerup = () => (drag = null);
-      $("paper").onpointercancel = () => {
-        drag = null;
-      };
-      $("crop").onclick = () => {
-        if (cropMode) {
-          cancelCrop();
-          return;
+        const p = point(e),
+          r = drag.rect;
+        if (drag.mode === "move") {
+          cropRect = {
+            ...r,
+            x: Math.max(0, Math.min(canvas.width - r.w, r.x + p.x - drag.start.x)),
+            y: Math.max(0, Math.min(canvas.height - r.h, r.y + p.y - drag.start.y)),
+          };
+        } else {
+          let l = r.x,
+            t = r.y,
+            right = r.x + r.w,
+            b = r.y + r.h;
+          if (drag.mode === "new") [l, t, right, b] = [drag.start.x, drag.start.y, p.x, p.y];
+          else {
+            // Handle names are compass directions: n, ne, e, se, s, sw, w, nw.
+            if (drag.mode.includes("w")) l = p.x;
+            if (drag.mode.includes("e")) right = p.x;
+            if (drag.mode.includes("n")) t = p.y;
+            if (drag.mode.includes("s")) b = p.y;
+          }
+          cropRect = {
+            x: Math.min(l, right),
+            y: Math.min(t, b),
+            w: Math.abs(right - l),
+            h: Math.abs(b - t),
+          };
         }
-        cropMode = true;
-        $("paper").classList.add("cropping");
-        $("crop").classList.add("selected");
-        $("cropbar").hidden = false;
-        $("cropHint").textContent = "Drag over the image to select an area.";
-        $("applyCrop").disabled = true;
+        drawSelection();
       };
+      function endDrag() {
+        if (!drag) return;
+        drag = null;
+        // A click without dragging, or a zero-size area, selects the whole image again.
+        if (!cropRect || cropRect.w < 1 || cropRect.h < 1) cancelCrop();
+        else drawSelection();
+      }
+      $("paper").onpointerup = endDrag;
+      $("paper").onpointercancel = endDrag;
+      $("crop").onclick = () => $("applyCrop").click();
       $("cancelCrop").onclick = cancelCrop;
       $("applyCrop").onclick = () => {
-        if (!cropRect || cropRect.w < 1 || cropRect.h < 1) return;
+        if (!partial() || cropRect.w < 1 || cropRect.h < 1) return;
         try {
           const r = { ...cropRect };
           const temp = document.createElement("canvas");
@@ -1247,9 +1356,18 @@
         updateControls();
         status("Back to the original. You can undo this reset.");
       };
+      function output() {
+        if (!partial()) return canvas;
+        const r = cropRect,
+          temp = document.createElement("canvas");
+        temp.width = r.w;
+        temp.height = r.h;
+        temp.getContext("2d").drawImage(canvas, r.x, r.y, r.w, r.h, 0, 0, r.w, r.h);
+        return temp;
+      }
       function png() {
         return new Promise((resolve, reject) =>
-          canvas.toBlob(
+          output().toBlob(
             (blob) => (blob ? resolve(blob) : reject(new Error("Could not create the PNG."))),
             "image/png",
           ),
@@ -1264,7 +1382,7 @@
           await navigator.clipboard.write([new ClipboardItem({ "image/png": png() })]);
           toast("Copied. Ready to paste with ⌘V.");
           status(
-            `Copied ${canvas.width} × ${canvas.height} px PNG. Paste into a chat or Dro with ⌘V.`,
+            `Copied ${output().width} × ${output().height} px PNG. Paste into a chat or Dro with ⌘V.`,
           );
         } catch (e) {
           status("Copy was blocked. Allow clipboard access in your browser, or use Save PNG.");
@@ -1370,6 +1488,7 @@
       document.addEventListener("keydown", (e) => {
         if (e.target.matches("input,textarea") || $("resizeDialog").open) return;
         if (e.key === "Escape") cancelCrop();
+        if (e.key === "Enter" && partial() && !e.target.matches("button")) $("applyCrop").click();
         if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z" && !e.shiftKey) {
           e.preventDefault();
           undo();

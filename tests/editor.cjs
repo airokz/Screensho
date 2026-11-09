@@ -99,7 +99,10 @@ const { pathToFileURL } = require("node:url");
     await page.locator("#zoomIn").click();
     await page.locator("#actual").click();
     assert.deepEqual(await page.evaluate(() => [canvas.width, canvas.height, zoom]), [800, 400, 1]);
-    await page.locator("#crop").click();
+    // The whole image is selected from the start; no Crop click is needed.
+    assert.deepEqual(await page.evaluate(() => cropRect), { x: 0, y: 0, w: 800, h: 400 });
+    assert.equal(await page.locator("#applyCrop").isDisabled(), true);
+    assert.equal(await page.locator("#crop").isDisabled(), true);
     const bounds = await page.locator("#canvas").boundingBox();
     await page.mouse.move(bounds.x + 50, bounds.y + 50);
     await page.mouse.down();
@@ -115,14 +118,56 @@ const { pathToFileURL } = require("node:url");
     await page.waitForFunction(() => !busy && canvas.width === 800);
     assert.equal(await page.evaluate(() => dirty), false);
     // Reversed drag, bounds clamping, cancel without editing.
-    await page.locator("#crop").click();
     await page.mouse.move(bounds.x + 500, bounds.y + 250);
     await page.mouse.down();
     await page.mouse.move(bounds.x + 300, bounds.y + 150);
     await page.mouse.up();
     assert.deepEqual(await page.evaluate(() => [cropRect.w, cropRect.h]), [200, 100]);
     await page.keyboard.press("Escape");
-    assert.equal(await page.locator("#cropbar").isVisible(), false);
+    assert.equal(await page.locator("#applyCrop").isDisabled(), true);
+    assert.deepEqual(await page.evaluate(() => cropRect), { x: 0, y: 0, w: 800, h: 400 });
+    // Quick workflow: drag one corner, then copy the selected area without applying a crop.
+    const corner = await page.locator('[data-h="se"]').boundingBox();
+    await page.mouse.move(corner.x + corner.width / 2, corner.y + corner.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(bounds.x + 600, bounds.y + 300, { steps: 8 });
+    await page.mouse.up();
+    assert.deepEqual(await page.evaluate(() => cropRect), { x: 0, y: 0, w: 600, h: 300 });
+    // Dragging inside a partial selection moves it, clamped to the image.
+    await page.mouse.move(bounds.x + 300, bounds.y + 150);
+    await page.mouse.down();
+    await page.mouse.move(bounds.x + 600, bounds.y + 400, { steps: 8 });
+    await page.mouse.up();
+    assert.deepEqual(await page.evaluate(() => cropRect), { x: 200, y: 100, w: 600, h: 300 });
+    // An edge handle changes one side only.
+    const left = await page.locator('[data-h="w"]').boundingBox();
+    await page.mouse.move(left.x + left.width / 2, left.y + left.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(bounds.x + 300, left.y + left.height / 2, { steps: 8 });
+    await page.mouse.up();
+    assert.deepEqual(await page.evaluate(() => cropRect), { x: 300, y: 100, w: 500, h: 300 });
+    await page.locator("#copy").click();
+    await page.waitForFunction(() =>
+      document.querySelector("#status").textContent.startsWith("Copied 500"),
+    );
+    const quick = await page.evaluate(async () => {
+      const [item] = await navigator.clipboard.read();
+      const bitmap = await createImageBitmap(await item.getType("image/png"));
+      return [bitmap.width, bitmap.height, canvas.width, canvas.height, dirty];
+    });
+    assert.deepEqual(quick, [500, 300, 800, 400, false]);
+    // Enter applies the selection as a crop; the Crop button does the same.
+    assert.equal(await page.locator("#crop").isDisabled(), false);
+    await page.evaluate(() => document.activeElement.blur());
+    await page.keyboard.press("Enter");
+    assert.deepEqual(await page.evaluate(() => [canvas.width, canvas.height, dirty]), [
+      500,
+      300,
+      true,
+    ]);
+    assert.deepEqual(await page.evaluate(() => cropRect), { x: 0, y: 0, w: 500, h: 300 });
+    await page.locator("#undo").click();
+    await page.waitForFunction(() => !busy && canvas.width === 800);
     await page.locator("#resize").click();
     await page.locator("#width").fill("400");
     assert.equal(await page.locator("#height").inputValue(), "200");
@@ -250,7 +295,7 @@ const { pathToFileURL } = require("node:url");
     await fs.mkdir(path.resolve(__dirname, "../test-results"), { recursive: true });
     await page.screenshot({ path: path.resolve(__dirname, "../test-results/editor.png") });
     console.log(
-      "PASS: file:// launch, import, crop pixels, reverse crop, cancel, resize, undo/reset, native PNG clipboard, paste into Dro, PNG download, folder ordering/refresh/filter/deletion, safe filenames, responsive layout, no outgoing requests.",
+      "PASS: file:// launch, import, crop pixels, reverse crop, cancel, corner/edge/move selection, copy selection without applying, resize, undo/reset, native PNG clipboard, paste into Dro, PNG download, folder ordering/refresh/filter/deletion, safe filenames, responsive layout, no outgoing requests.",
     );
   } finally {
     await browser.close();
