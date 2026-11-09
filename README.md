@@ -75,3 +75,7 @@ Run `npm run preview` to regenerate `docs/screenshot.png` from the fictional cap
 The deployment workflow follows Dro's `.github/workflows/pages.yml`: checkout, copy the single HTML into `_site`, configure Pages, upload the artifact, and deploy. Pages publishes the same application with no backend or screenshot uploads.
 
 **Deployment is currently unavailable:** GitHub rejected enabling Pages because the current plan does not support Pages for this private repository. The repository remains private. After switching to a Pages-capable plan, enable **Settings → Pages → Source: GitHub Actions**, set the repository Actions variable `PAGES_ENABLED=true`, and run **Deploy demo to GitHub Pages**. The workflow skips deployment while the repository is private and that variable is unset. No live-demo link is shown until deployment is available.
+
+## License
+
+[Apache License 2.0](LICENSE). The standalone HTML also includes the license so it can be shared on its own. This license covers Screensho's code and bundled example artwork, not screenshots or images you open or edit.
