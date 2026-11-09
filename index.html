@@ -605,22 +605,29 @@
       <div class="folder">
         <strong id="folderName">Screenshots folder</strong>
         <p id="folderHint">
-          Pick a folder like <strong>Desktop/Screenshots</strong>. Chrome blocks the whole Desktop.
+          Pick a <strong>Screenshots</strong> folder, not the whole Desktop, Documents, or
+          Downloads.
         </p>
         <button id="connect">Choose Screenshots folder</button>
         <details class="setup">
           <summary>Set up a Screenshots folder</summary>
           <p>
-            Chrome cannot connect to the whole Desktop. Create a <strong>Screenshots</strong> folder
-            inside it, then select that folder.
+            Browsers can't connect to your whole <strong>Desktop</strong>,
+            <strong>Documents</strong>, <strong>Downloads</strong>, or home folder. A
+            <strong>Screenshots</strong> folder inside them works.
           </p>
           <p>
-            For new captures: press <strong>⌘⇧5</strong> → <strong>Options</strong> →
-            <strong>Other Location…</strong> and choose your Screenshots folder.
+            <strong>Mac:</strong> create Desktop/Screenshots, then press <strong>⌘⇧5</strong> →
+            <strong>Options</strong> → <strong>Other Location…</strong> and choose it.
           </p>
           <p>
-            Existing images on Desktop? Use <strong>Open images</strong>, or move them into
-            Screenshots in Finder.
+            <strong>Windows:</strong> <strong>Win+PrtScn</strong> and Snipping Tool already save to
+            <strong>Pictures\Screenshots</strong> (with OneDrive, OneDrive\Pictures\Screenshots).
+            Choose that folder.
+          </p>
+          <p>
+            Images loose on your Desktop? Use <strong>Open images</strong>, or move them into the
+            Screenshots folder.
           </p>
         </details>
       </div>
@@ -706,7 +713,8 @@
           <button class="primary" id="start">Choose Screenshots folder</button
           ><button id="openFiles">Open images</button>
           <p class="hint">
-            Or drop an image here · Paste with ⌘V<br />Use Chrome for a live Screenshots folder.
+            Or drop an image here · Paste with ⌘V<br />Use Chrome or Edge for a live Screenshots
+            folder.
           </p>
         </div>
       </div>
@@ -817,7 +825,7 @@
         try {
           if (!window.showDirectoryPicker) {
             status(
-              "Live folder access needs Chrome or Edge. Use Open images, drop, or paste instead.",
+              "Live folder access needs Chrome, Edge, or another Chromium browser (in Brave, enable brave://flags/#file-system-access-api). Use Open images, drop, or paste instead.",
             );
             $("fileInput").click();
             return;
@@ -842,19 +850,21 @@
           await scan();
         } catch (e) {
           if (e.name === "AbortError") {
-            // Chrome shows its own "can't open this folder" dialog for Desktop, Documents, and
-            // home; when it is dismissed the page only sees a cancel, so explain the fix here.
+            // Chromium browsers show their own "can't open this folder" dialog for home, Desktop,
+            // Documents, and Downloads; dismissing it reaches the page only as a cancel.
             if (!directory) {
               document.querySelector(".setup").open = true;
               status(
-                "No folder connected. Chrome blocks the whole Desktop; choose a Screenshots folder inside it.",
+                "No folder connected. Browsers block the whole Desktop, Documents, and Downloads; choose a Screenshots folder inside one.",
               );
-              toast("Chrome can't open the whole Desktop. Choose Desktop/Screenshots instead.");
+              toast(
+                "Browsers can't open the whole Desktop. Choose a Screenshots folder inside it.",
+              );
             }
           } else if (e.name === "SecurityError" || e.name === "NotAllowedError") {
             document.querySelector(".setup").open = true;
             status(
-              "Choose a Screenshots subfolder, not the whole Desktop. You can also use Open images.",
+              "Choose a Screenshots folder, not the whole Desktop, Documents, or Downloads. You can also use Open images.",
             );
             toast("Folder access was blocked. Choose a Screenshots subfolder.");
           } else report(e);
