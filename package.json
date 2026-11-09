@@ -1,0 +1,8 @@
+{
+  "name": "screensho",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A private, single-file screenshot workbench for macOS",
+  "scripts": { "test": "node tests/editor.cjs" },
+  "devDependencies": { "playwright-core": "1.61.1" }
+}
