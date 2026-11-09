@@ -123,7 +123,7 @@
         background: #efede8;
         border-radius: 12px;
       }
-      .folder strong {
+      .folder > strong {
         font-size: 12px;
         display: block;
         overflow: hidden;
@@ -604,7 +604,9 @@
       </div>
       <div class="folder">
         <strong id="folderName">Screenshots folder</strong>
-        <p id="folderHint">Choose the folder where your screenshots are saved.</p>
+        <p id="folderHint">
+          Pick a folder like <strong>Desktop/Screenshots</strong>. Chrome blocks the whole Desktop.
+        </p>
         <button id="connect">Choose Screenshots folder</button>
         <details class="setup">
           <summary>Set up a Screenshots folder</summary>
@@ -840,10 +842,15 @@
           await scan();
         } catch (e) {
           if (e.name === "AbortError") {
-            if (!directory)
+            // Chrome shows its own "can't open this folder" dialog for Desktop, Documents, and
+            // home; when it is dismissed the page only sees a cancel, so explain the fix here.
+            if (!directory) {
+              document.querySelector(".setup").open = true;
               status(
-                "Choose a Screenshots subfolder. Chrome blocks the whole Desktop; see folder setup for help.",
+                "No folder connected. Chrome blocks the whole Desktop; choose a Screenshots folder inside it.",
               );
+              toast("Chrome can't open the whole Desktop. Choose Desktop/Screenshots instead.");
+            }
           } else if (e.name === "SecurityError" || e.name === "NotAllowedError") {
             document.querySelector(".setup").open = true;
             status(

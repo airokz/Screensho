@@ -51,6 +51,24 @@ const { pathToFileURL } = require("node:url");
       startIn: "pictures",
       mode: "read",
     });
+    // Cancelling Chrome's own "can't open this folder" dialog only reaches the page as a
+    // cancel, so a cancel without a connected folder must also show the setup help.
+    await page.locator(".setup summary").click();
+    assert.equal(await page.locator(".setup").getAttribute("open"), null);
+    await page.evaluate(async () => {
+      const picker = window.showDirectoryPicker;
+      try {
+        window.showDirectoryPicker = async () => {
+          throw new DOMException("Cancelled", "AbortError");
+        };
+        await connect();
+      } finally {
+        window.showDirectoryPicker = picker;
+      }
+    });
+    assert.equal(await page.locator(".setup").getAttribute("open"), "");
+    assert.match(await page.locator("#toast").textContent(), /Desktop\/Screenshots/);
+    assert.match(await page.locator("#folderHint").textContent(), /Desktop\/Screenshots/);
     await page.locator(".setup summary").click();
     // All test images are generated in memory. Never load the user's screenshots.
     const png = await page.evaluate(() => {
