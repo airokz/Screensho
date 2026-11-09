@@ -4,7 +4,8 @@
   "private": true,
   "description": "A private, single-file screenshot workbench for macOS",
   "scripts": {
-    "test": "node tests/editor.cjs"
+    "test": "node tests/editor.cjs",
+    "preview": "node tests/preview.cjs"
   },
   "devDependencies": {
     "playwright-core": "1.61.1"
